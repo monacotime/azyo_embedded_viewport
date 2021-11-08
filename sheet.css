@@ -1,6 +1,7 @@
 .display_glass{
     display: flex;
     flex-direction: row;
+    gap: 10px;
 }
 
 .client_holder{
