@@ -47,6 +47,8 @@
     font-size: 18px;
     height: 100%;
     background-color: rgb(37, 37, 37);
+    flex-wrap: wrap;
+    align-content: center;
 }
 
 .azyo_start_button {
@@ -57,4 +59,28 @@
     /* position: absolute; */
     font-weight: bolder;
     font-size: 32px;
+}
+
+.azyo_video_container {
+    margin: 0px auto;
+	/* width: 100%;
+	height: 100%; */
+    width: 100%;
+	height: 40%;
+	border: 10px #333 solid;
+}
+
+.azyo_videoElement {
+	width: 100%;
+	height: 100%;
+	background-color: #666;
+}
+
+.azyo_instructions {
+    /* display: flex;
+    align-items: center;
+    text-align: center; */
+    font-size: 18;
+    color: white;
+    padding:15px;
 }

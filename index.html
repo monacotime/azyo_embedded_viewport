@@ -31,12 +31,30 @@
                     AZYO
                 </div>
                 <div class = "azyo_content">
-                    <video></video>
+                    <div class = "azyo_video_container">
+                        <video autoplay="true" class = "azyo_videoElement" id = "azyo_vid"></video>
+                    </div>
+                    <div class="azyo_instructions">
+                        Do some task as per instructions
+                    </div>
                 </div>
                 <div class = "azyo_start_button">
-                    <a href="#">Start</a>
+                    <a href="#">Next</a>
                 </div>
             </div>
         </div>
+        <script>
+            var video = document.querySelector("#azyo_vid");
+
+            if (navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                video.srcObject = stream;
+                })
+                .catch(function (err0r) {
+                console.log("Something went wrong!");
+                });
+            }
+        </script>
     </body>
 </html>
