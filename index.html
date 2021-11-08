@@ -8,38 +8,55 @@
         <title>Document</title>
     </head>
     <body>
-
-        <div id="js_made" class="client_holder"></div>
-
-        <div class = "client_holder" >
-            <div class="azyo_container">
-                <div class = "azyo_title">
-                    AZYO
-                </div>
-                <div class = "azyo_content">
-                    Lorem ifwfwq fqgre gbrhgwerh geqwghwer hrwh we gweg wegww gwe gweg g wegw
-                </div>
-                <div class = "azyo_start_button">
-                    <a href="#">Start</a>
+        <div id = "js_made" class = "client_holder">
+        </div>
+        <div class = "display_glass">
+            <div class = "client_holder" >
+                <div class="azyo_container">
+                    <div class = "azyo_title">
+                        AZYO
+                    </div>
+                    <div class = "azyo_content">
+                        Lorem ifwfwq fqgre gbrhgwerh geqwghwer hrwh we gweg wegww gwe gweg g wegw
+                    </div>
+                    <div class = "azyo_start_button">
+                        <a href="#">Start</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <br>
-        <br>
-        <div class = "client_holder" >
-            <div class="azyo_container">
-                <div class = "azyo_title">
-                    AZYO
-                </div>
-                <div class = "azyo_content">
-                    <video></video>
-                </div>
-                <div class = "azyo_start_button">
-                    <a href="#">Start</a>
+            <div class = "client_holder" >
+                <div class="azyo_container">
+                    <div class = "azyo_title">
+                        AZYO
+                    </div>
+                    <div class = "azyo_content">
+                        <div class = "azyo_video_container">
+                            <video autoplay="true" class = "azyo_videoElement" id = "azyo_vid"></video>
+                        </div>
+                        <div class="azyo_instructions">
+                            Do some task as per instructions
+                        </div>
+                    </div>
+                    <div class = "azyo_start_button">
+                        <a href="#">Next</a>
+                    </div>
                 </div>
             </div>
         </div>
 
         <script src="script.js"></script>
+        <script>
+            var video = document.querySelector("#azyo_vid");
+
+            if (navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                video.srcObject = stream;
+                })
+                .catch(function (err0r) {
+                console.log("Something went wrong!");
+                });
+            }
+        </script>
     </body>
 </html>
