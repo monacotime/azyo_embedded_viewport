@@ -1,4 +1,8 @@
-
+//coindcx 
+//binance
+//shufty
+//onfeedo
+//varif
 class AzyoView {
     init_view() {
         console.log('view was initialized')
