@@ -11,76 +11,6 @@ function create_div(class_name, content="") {
 //onfeedo
 //varif
 
-class AzyoView {
-    init_view() {
-        console.log('view was initialized')
-    }
-    
-    distroy_view() {
-        console.log('view was distroyed')
-    }
-
-    render_view(root_div, next) {
-        console.log('view was rendered')
-        var btn = document.createElement('button')
-        btn.innerHTML = "Next"
-        
-        root_div.appendChild(btn)
-        return btn
-    }
-}
-
-class VideoView extends AzyoView {
-    render_view(root_div, next) {
-        var div = document.createElement('div')
-        var video = document.createElement('video')
-        this.video = video
-        video.autoplay = true
-        video.id = "azyo_vid_x"
-        video.classList.add("azyo_videoElement")
-        div.appendChild(video)
-
-        var btn = document.createElement('button')
-        btn.innerHTML = "Next"
-
-        root_div.appendChild(div)
-        root_div.appendChild(btn)
-        return btn
-    }
-
-    init_view() {
-        var video = this.video
-        if (navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function (stream) {
-                video.srcObject = stream;
-            })
-            .catch(function (err0r) {
-                console.log("Something went wrong!");
-            });
-        }
-    }
-
-    distroy_view() {
-        var video = this.video
-        var stream = video.srcObject;
-        var tracks = stream.getTracks();
-
-        for (var i = 0; i < tracks.length; i++) {
-            var track = tracks[i];
-            track.stop();
-        }
-
-        video.srcObject = null;
-    }
-}
-
-
-class DemoView extends AzyoView {}
-class Demo1View extends AzyoView {}
-class Demo2View extends AzyoView {}
-
-
 class AzyoViewPort {
     #current = 0
     #ends = null
@@ -141,7 +71,7 @@ class AzyoViewPort {
     }
 
     #set_view(view) {
-        var next_btn = view.render_view(this.root, this.next)
+        var next_btn = view.render_view(this.root)
         next_btn.addEventListener('click', ev=> {this.next()})
         view.init_view()
     }
@@ -154,12 +84,12 @@ class AzyoViewPort {
 }
 
 
-const root = document.getElementById('js_made')
+const root = document.getElementById('exampleModal')
 
 AV = new AzyoViewPort(root)
 AV.register_views([
-    VideoView,
-    Demo1View,
-    Demo2View
+    ModelView1,
+    ModelView2,
+    ModelView3,
 ], true)
 AV.on_finish(() => {console.log('FINISHED')})
