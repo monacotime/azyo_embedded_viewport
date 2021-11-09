@@ -30,7 +30,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <h6>
+                <h6 class="azyo-modal-body-title">
                     Demo Inc would like to confirm your identity, a process powered by Veriff.
                 </h3>
                 <h7>
@@ -53,20 +53,35 @@
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+        <div class="modal-dialog modal-dialog-centered modal-lg azyo-modal-dialog" role="document">
+        <div class="modal-content azyo-modal-content">
+            <div class="modal-header azyo-modal-header">
+                <h6>AZYO</h6>
+                <h5 class="modal-title" id="exampleModalLabel">Take a photo of your document’s photo page</h5>
+                <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
-            ... 2
+                <h6 class="azyo-modal-body-title">
+                    Accepted documents: driver's license, passport, ID card.
+                </h3>
+                <div class = "azyo_video_container">
+                    <video autoplay="true" class = "azyo_videoElement" id = "azyo_vid"></video>
+                </div>
+                <h7>
+                    BEFORE YOU START, PLEASE:
+                </h7>
+                <br>
+                <ul>
+                    <li>Prepare a valid government-issued identity document</li>
+                    <li>Check if your device’s camera is uncovered and working</li>
+                    <li>Be prepared to take a selfie and photos of your ID</li>
+                </ul>
             </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <div class="modal-footer azyo-moal-footer">
+                <button type="button" class="btn btn-primary">Take Photo</button>
+                <p class = "azyo-cc">Powered by AZYO</p>
             </div>
         </div>
         </div>
