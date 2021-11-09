@@ -1,3 +1,9 @@
+function create_div(class_name, content="") {
+    var div = document.createElement('div')
+    div.classList.add(class_name)
+    if(content) div.innerHTML = content
+    return div
+}
 
 class AzyoView {
     init_view() {
@@ -8,50 +14,65 @@ class AzyoView {
         console.log('view was distroyed')
     }
 
-    render_view() {
+    render_view(root_div, next) {
         console.log('view was rendered')
+        var btn = document.createElement('button')
+        btn.innerHTML = "Next"
+        
+        root_div.appendChild(btn)
+        return btn
     }
 }
 
+class VideoView extends AzyoView {
+    render_view(root_div, next) {
+        var div = document.createElement('div')
+        var video = document.createElement('video')
+        this.video = video
+        video.autoplay = true
+        video.id = "azyo_vid_x"
+        video.classList.add("azyo_videoElement")
+        div.appendChild(video)
 
-function create_div(class_name, content="") {
-    var div = document.createElement('div')
-    div.classList.add(class_name)
-    if(content) div.innerHTML = content
-    return div
-}
+        var btn = document.createElement('button')
+        btn.innerHTML = "Next"
 
-class Demoview1 extends AzyoView {
-    render_view() {
-        var azyo_container = create_div('azyo_container')
-        var azyo_title = create_div('azyo_title', 'AZYO')
-        var azyo_content = create_div('azyo_content', 'Lorem ifwfwq fqgre gbrhgwerh geqwghwer hrwh we gweg wegww gwe gweg g wegw')
-        var azyo_start_button = create_div('azyo_start_button', `<a href="#" onclick="AV.next()">Start</a>`)
-        Array.from([azyo_title, azyo_content, azyo_start_button]).forEach(el => {
-            azyo_container.appendChild(el)
-        })
-
-        return azyo_container
+        root_div.appendChild(div)
+        root_div.appendChild(btn)
+        return btn
     }
-}
 
-class Demoview2 extends AzyoView {
-    render_view() {
-        var azyo_container = create_div('azyo_container')
-        var azyo_title = create_div('azyo_title', 'AZYO')
-        var azyo_content = create_div('azyo_content', 'Something other than gibbrish!')
-        var azyo_start_button = create_div('azyo_start_button', `<a href="#" onclick="AV.next()">Start</a>`)
-        Array.from([azyo_title, azyo_content, azyo_start_button]).forEach(el => {
-            azyo_container.appendChild(el)
-        })
+    init_view() {
+        var video = this.video
+        if (navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                video.srcObject = stream;
+            })
+            .catch(function (err0r) {
+                console.log("Something went wrong!");
+            });
+        }
+    }
 
-        return azyo_container
+    distroy_view() {
+        var video = this.video
+        var stream = video.srcObject;
+        var tracks = stream.getTracks();
+
+        for (var i = 0; i < tracks.length; i++) {
+            var track = tracks[i];
+            track.stop();
+        }
+
+        video.srcObject = null;
     }
 }
 
 
 class DemoView extends AzyoView {}
-class FailView {}
+class Demo1View extends AzyoView {}
+class Demo2View extends AzyoView {}
 
 
 class AzyoViewPort {
@@ -77,23 +98,25 @@ class AzyoViewPort {
         });
 
         this.#views = new_views
-        this.#ends = this.#views.length
+        this.#ends = this.#views.length - 1
         
         if(init_first) {this.init_first_view()}
     }
 
     init_first_view() {
-        if(this.finished()) this.#unset_view(this.#views[this.#current])
+        if(this.finished_()) this.#unset_view(this.#views[this.#current])
         this.#current = 0
 
         var first_view = this.#views[0]
         this.#set_view(first_view)
     }
+    
+    finished_() { return (this.#ends === this.#current)? true: false}
 
     next() {
         console.log('next')
-        if(this.finished()) {
-            // this.on_finish()
+        if(this.finished_()) {
+            this.after_finish()
         }
         else {
             console.log('next else')
@@ -106,27 +129,31 @@ class AzyoViewPort {
         }
     }
 
-    finished() { return this.#ends == this.#current}
 
-    // on_finish(do_something) {do_something()}
+    on_finish(do_something) {
+        this.after_finish = do_something
+    }
 
     #set_view(view) {
-        var render_div = view.render_view()
-        console.log(render_div)
-        this.root.appendChild(render_div)
+        var next_btn = view.render_view(this.root, this.next)
+        next_btn.addEventListener('click', ev=> {this.next()})
         view.init_view()
     }
 
-    #unset_view(view) {view.distroy_view()}
+    #unset_view(view) {
+        this.root.innerHTML = ""
+        view.distroy_view()
+    }
 
 }
 
 
 const root = document.getElementById('js_made')
+
 AV = new AzyoViewPort(root)
 AV.register_views([
-    Demoview1,
-    Demoview2
+    VideoView,
+    Demo1View,
+    Demo2View
 ], true)
-
-// AV.on_finish(() => {console.log('FINISHED')})
+AV.on_finish(() => {console.log('FINISHED')})
