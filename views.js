@@ -138,30 +138,66 @@ class ModelView2 extends AzyoView {
         model_body.classList.add("modal-body")
         model_body.innerHTML = `Model body 2`
 
+        var body_title = document.createElement('h6')
+        body_title.classList.add("modal-body")
+
+        var video_container = document.createElement('div')
+        video_container.classList.add("azyo_video_container")
+
+        var video = document.createElement('video')
+        this.video = video
+        video.autoplay = "true"
+        video.id = "azyo_vid"
+        video.classList.add("azyo_videoElement")
+
+
         var model_footer = document.createElement('div')
-        model_footer.classList.add('modal-footer')
+        model_footer.classList.add('modal-footer', 'azyo-moal-footer')
         
-        var temp_btn = document.createElement('button')
-        temp_btn.type="button"
-        temp_btn.classList.add('btn', 'btn-secondary')
-        temp_btn.dataset.dismiss = "modal"
-        temp_btn.ariaLabel = "Close dialog"
-        temp_btn.innerHTML = "Close"
-        
+
         var next_btn = document.createElement('button')
         next_btn.type="button"
         next_btn.classList.add('btn', 'btn-primary')
-        // next_btn.dataset.dismiss = "modal"
-        // next_btn.ariaLabel = "Close dialog"
-        next_btn.innerHTML = "Next"
+        next_btn.innerHTML = "Take Photo"
 
-        model_footer.append(temp_btn, next_btn)
+        var p = document.createElement('p')
+        p.classList.add('azyo-cc')
+        p.innerHTML = "Powered by AZYO"
+
+        model_footer.append(next_btn, p)
+        video_container.appendChild(video)
+        model_body.append(body_title, video_container)
         model_content.append(model_header, model_body, model_footer)
         model_wrapper.appendChild(model_content)
         root_div.appendChild(model_wrapper)
-        console.log(root_div)
 
         return next_btn
+    }
+
+    init_view() {
+        var video = this.video
+        if (navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                video.srcObject = stream;
+            })
+            .catch(function (err0r) {
+                console.log("Something went wrong!");
+            });
+        }
+    }
+
+    distroy_view() {
+        var video = this.video
+        var stream = video.srcObject;
+        var tracks = stream.getTracks();
+
+        for (var i = 0; i < tracks.length; i++) {
+            var track = tracks[i];
+            track.stop();
+        }
+
+        video.srcObject = null;
     }
 }
 class ModelView3 extends AzyoView {
@@ -188,21 +224,8 @@ class ModelView3 extends AzyoView {
         var model_footer = document.createElement('div')
         model_footer.classList.add('modal-footer')
         
-        var temp_btn = document.createElement('button')
-        temp_btn.type="button"
-        temp_btn.classList.add('btn', 'btn-secondary')
-        temp_btn.dataset.dismiss = "modal"
-        temp_btn.ariaLabel = "Close dialog"
-        temp_btn.innerHTML = "Close"
         
-        var next_btn = document.createElement('button')
-        next_btn.type="button"
-        next_btn.classList.add('btn', 'btn-primary')
-        // next_btn.dataset.dismiss = "modal"
-        // next_btn.ariaLabel = "Close dialog"
-        next_btn.innerHTML = "Next"
-
-        model_footer.append(temp_btn, next_btn)
+        model_footer.append()
         model_content.append(model_header, model_body, model_footer)
         model_wrapper.appendChild(model_content)
         root_div.appendChild(model_wrapper)
