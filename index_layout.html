@@ -17,8 +17,12 @@
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2">
         view 2
     </button>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal3">
+        view 3
+    </button>
 
-    <!-- Modal -->
+    <!-- Modal 1 -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg azyo-modal-dialog" role="document">
         <div class="modal-content azyo-modal-content">
@@ -32,7 +36,7 @@
             <div class="modal-body">
                 <h6 class="azyo-modal-body-title">
                     Demo Inc would like to confirm your identity, a process powered by Veriff.
-                </h3>
+                </h6>
                 <h7>
                     BEFORE YOU START, PLEASE:
                 </h7>
@@ -51,7 +55,7 @@
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal 2 -->
     <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg azyo-modal-dialog" role="document">
         <div class="modal-content azyo-modal-content">
@@ -69,15 +73,33 @@
                 <div class = "azyo_video_container">
                     <video autoplay="true" class = "azyo_videoElement" id = "azyo_vid"></video>
                 </div>
-                <h7>
-                    BEFORE YOU START, PLEASE:
-                </h7>
-                <br>
-                <ul>
-                    <li>Prepare a valid government-issued identity document</li>
-                    <li>Check if your device’s camera is uncovered and working</li>
-                    <li>Be prepared to take a selfie and photos of your ID</li>
-                </ul>
+            </div>
+            <div class="modal-footer azyo-moal-footer">
+                <button type="button" class="btn btn-primary">Take Photo</button>
+                <p class = "azyo-cc">Powered by AZYO</p>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Modal 3 -->
+    <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg azyo-modal-dialog" role="document">
+        <div class="modal-content azyo-modal-content">
+            <div class="modal-header azyo-modal-header">
+                <h6>AZYO</h6>
+                <h5 class="modal-title" id="exampleModalLabel">Turn your ID card around</h5>
+                <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6 class="azyo-modal-body-title">
+                    Turn your ID card around and take a photo of the other side.
+                </h6>
+                <div class = "azyo_video_container">
+                    <video autoplay="true" class = "azyo_videoElement" id = "azyo_vid"></video>
+                </div>
             </div>
             <div class="modal-footer azyo-moal-footer">
                 <button type="button" class="btn btn-primary">Take Photo</button>
