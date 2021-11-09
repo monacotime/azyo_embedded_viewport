@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 function create_div(class_name, content="") {
     var div = document.createElement('div')
     div.classList.add(class_name)
@@ -5,6 +6,13 @@ function create_div(class_name, content="") {
     return div
 }
 
+=======
+//coindcx 
+//binance
+//shufty
+//onfeedo
+//varif
+>>>>>>> 1dc8642f13bd5db5736664aac90127bc5fe23fd8
 class AzyoView {
     init_view() {
         console.log('view was initialized')
