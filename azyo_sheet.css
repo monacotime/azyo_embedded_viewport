@@ -1,0 +1,32 @@
+.azyo-modal-dialog {
+    height: 80%;
+}
+
+.azyo-modal-content{
+    height: 80%;
+}
+
+.azyo-modal-header{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.azyo-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.azyo-moal-footer{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.azyo-cc {
+    padding-top: 4px;
+    margin: 0px;
+    font-size: 11px;
+    opacity: 40%;
+}
