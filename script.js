@@ -92,4 +92,4 @@ AV.register_views([
     ModelView2,
     ModelView3,
 ], true)
-AV.on_finish(() => {console.log('FINISHED')})
+AV.on_finish(() => {AV.init_first_view()})

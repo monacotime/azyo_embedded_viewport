@@ -128,8 +128,8 @@ class ModelView2 extends AzyoView {
 
         var model_header = document.createElement('div')
         model_header.classList.add('modal-header', 'azyo-modal-header')
-        model_header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        model_header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Get your face ready</h5>
+        <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>`
 
@@ -196,6 +196,11 @@ class ModelView2 extends AzyoView {
     }
 
     distroy_view() {
+        var photo = this.takepicture()
+        var img = document.getElementById('selfie')
+        img.setAttribute('src', photo)
+        console.log('sending selfie photo')
+
         var video = this.video
         var stream = video.srcObject;
         var tracks = stream.getTracks();
@@ -206,9 +211,6 @@ class ModelView2 extends AzyoView {
         }
 
         video.srcObject = null;
-
-        var photo = this.takepicture()
-        console.log(photo)
     }
 
     takepicture() {
