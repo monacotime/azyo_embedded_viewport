@@ -73,7 +73,7 @@ class ModelView1 extends AzyoView {
 
         var model_header = document.createElement('div')
         model_header.classList.add('modal-header', 'azyo-modal-header')
-        model_header.innerHTML = `<h6>AZYO</h6>
+        model_header.innerHTML = `
         <h5 class="modal-title" id="exampleModalLabel">Let's get you verified</h5>
         <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -241,7 +241,7 @@ class ModelView3 extends AzyoView {
 
         var model_header = document.createElement('div')
         model_header.classList.add('modal-header', 'azyo-modal-header')
-        model_header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Get your documents ready</h5>
+        model_header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Get your document's <strong>FRONT</strong> side ready</h5>
         <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>`
@@ -341,6 +341,8 @@ class ModelView3 extends AzyoView {
         return null
     }
 }
+
+
 class ModelView4 extends AzyoView {
     render_view(root_div) {
         var model_wrapper = document.createElement('div')
@@ -352,7 +354,7 @@ class ModelView4 extends AzyoView {
 
         var model_header = document.createElement('div')
         model_header.classList.add('modal-header', 'azyo-modal-header')
-        model_header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Get your documents ready</h5>
+        model_header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Turn your ID card for capturing <strong>BACK</strong> side</h5>
         <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>`
@@ -450,5 +452,50 @@ class ModelView4 extends AzyoView {
         }
 
         return null
+    }
+}
+class ModelView5 extends AzyoView {
+    render_view(root_div) {
+        var model_wrapper = document.createElement('div')
+        model_wrapper.classList.add('modal-dialog', 'modal-dialog-centered', 'modal-lg', 'azyo-modal-dialog')
+        model_wrapper.role = "document"
+
+        var model_content = document.createElement('div')
+        model_content.classList.add('modal-content', 'azyo-modal-content')
+
+        var model_header = document.createElement('div')
+        model_header.classList.add('modal-header', 'azyo-modal-header')
+        model_header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Thank You</h5>
+        <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>`
+
+        
+        var model_body = document.createElement('div')
+        model_body.classList.add("modal-body")
+
+        var body_title = document.createElement('h6')
+        body_title.classList.add("azyo-modal-body-title")
+        body_title.innerHTML = "Your verification process is complete!"
+
+        var model_footer = document.createElement('div')
+        model_footer.classList.add('modal-footer', 'azyo-moal-footer')
+        
+        var next_btn = document.createElement('button')
+        next_btn.type="button"
+        next_btn.classList.add('btn', 'btn-primary')
+        next_btn.innerHTML = "Thank You"
+
+        var p = document.createElement('p')
+        p.classList.add('azyo-cc')
+        p.innerHTML = "Powered by AZYO"
+
+        model_footer.append(next_btn, p)
+        model_body.append(body_title)
+        model_content.append(model_header, model_body, model_footer)
+        model_wrapper.appendChild(model_content)
+        root_div.appendChild(model_wrapper)
+
+        return next_btn
     }
 }

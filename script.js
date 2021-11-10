@@ -91,5 +91,7 @@ AV.register_views([
     ModelView1,
     ModelView2,
     ModelView3,
+    ModelView4,
+    ModelView5
 ], true)
 AV.on_finish(() => {AV.init_first_view()})
