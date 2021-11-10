@@ -120,7 +120,7 @@ class ModelView1 extends AzyoView {
 class ModelView2 extends AzyoView {
     render_view(root_div) {
         var model_wrapper = document.createElement('div')
-        model_wrapper.classList.add('modal-dialog', 'modal-dialog-centered', 'modal-lg')
+        model_wrapper.classList.add('modal-dialog', 'modal-dialog-centered', 'modal-lg', 'azyo-modal-dialog')
         model_wrapper.role = "document"
 
         var model_content = document.createElement('div')
@@ -208,17 +208,16 @@ class ModelView2 extends AzyoView {
         video.srcObject = null;
 
         var photo = this.takepicture()
-        
+        console.log(photo)
     }
 
     takepicture() {
         var height = this.video.height
         var width = this.video.width
-        var context = canvas.getContext('2d');
         if (width && height) {
-            canvas.width = width;
-            canvas.height = height;
-            context.drawImage(video, 0, 0, width, height);
+            this.canvas.width = width;
+            this.canvas.height = height;
+            this.context.drawImage(this.video, 0, 0, width, height);
     
             var data = canvas.toDataURL('image/png');
             return data
