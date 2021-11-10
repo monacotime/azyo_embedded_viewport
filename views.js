@@ -124,10 +124,10 @@ class ModelView2 extends AzyoView {
         model_wrapper.role = "document"
 
         var model_content = document.createElement('div')
-        model_content.classList.add('modal-content')
+        model_content.classList.add('modal-content', 'azyo-modal-content')
 
         var model_header = document.createElement('div')
-        model_header.classList.add('modal-header')
+        model_header.classList.add('modal-header', 'azyo-modal-header')
         model_header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -136,10 +136,10 @@ class ModelView2 extends AzyoView {
         
         var model_body = document.createElement('div')
         model_body.classList.add("modal-body")
-        model_body.innerHTML = `Model body 2`
 
         var body_title = document.createElement('h6')
-        body_title.classList.add("modal-body")
+        body_title.classList.add("azyo-modal-body-title")
+        body_title.innerHTML = "Please remove eyeware of caps"
 
         var video_container = document.createElement('div')
         video_container.classList.add("azyo_video_container")
@@ -219,7 +219,7 @@ class ModelView2 extends AzyoView {
             this.canvas.height = height;
             this.context.drawImage(this.video, 0, 0, width, height);
     
-            var data = canvas.toDataURL('image/png');
+            var data = this.canvas.toDataURL('image/png');
             return data
         }
 
