@@ -90,6 +90,6 @@ AV = new AzyoViewPort(root)
 AV.register_views([
     ModelView1,
     ModelView2,
-    // ModelView3,
+    ModelView3,
 ], true)
 AV.on_finish(() => {console.log('FINISHED')})
