@@ -129,7 +129,7 @@ class ModelView2 extends AzyoView {
 
         var model_header = document.createElement('div')
         model_header.classList.add('modal-header', 'azyo-modal-header')
-        model_header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Get your face ready</h5>
+        model_header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Take a selfie</h5>
         <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>`
@@ -140,7 +140,7 @@ class ModelView2 extends AzyoView {
 
         var body_title = document.createElement('h6')
         body_title.classList.add("azyo-modal-body-title")
-        body_title.innerHTML = "Please remove eyeware of caps"
+        body_title.innerHTML = "Make sure that your face is in the frame and clearly visible."
 
         var video_container = document.createElement('div')
         video_container.classList.add("azyo_video_container")
@@ -158,6 +158,25 @@ class ModelView2 extends AzyoView {
         video.id = "azyo_vid"
         video.classList.add("azyo_videoElement")
 
+        var svg = document.createElement('svg')
+        svg.classList.add("azyo-selfie-guide")
+        svg.setAttribute('viewBox', "0 0 180 180")
+        svg.setAttribute('width', 270)
+        svg.setAttribute('height', 270)
+        svg.setAttribute('fill', "none")
+        svg.setAttribute('aria-hidden', true)
+        svg.setAttribute('focusable', false)
+        document.getElementById("test").appendChild(svg)
+
+        var circle = document.createElement('circle')
+        circle.setAttribute('opacity', 0.4)
+        circle.setAttribute('cx', 90)
+        circle.setAttribute('cy', 90)
+        circle.setAttribute('r', 88)
+        circle.setAttribute('stroke', 'black')
+        circle.setAttribute('stroke-width', 4)
+        svg.appendChild(circle)
+
 
         var model_footer = document.createElement('div')
         model_footer.classList.add('modal-footer', 'azyo-moal-footer')
@@ -173,8 +192,9 @@ class ModelView2 extends AzyoView {
         p.innerHTML = "Powered by AZYO"
 
         model_footer.append(next_btn, p)
-        video_container.append(video, canvas)
+        video_container.append(svg, video, canvas)
         model_body.append(body_title, video_container)
+        console.log(model_body)
         model_content.append(model_header, model_body, model_footer)
         model_wrapper.appendChild(model_content)
         root_div.appendChild(model_wrapper)
@@ -403,6 +423,7 @@ class ModelView4 extends AzyoView {
         model_content.append(model_header, model_body, model_footer)
         model_wrapper.appendChild(model_content)
         root_div.appendChild(model_wrapper)
+        console.log(root_div)
 
         return next_btn
     }
