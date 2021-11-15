@@ -158,39 +158,18 @@ class ModelView2 extends AzyoView {
         video.id = "azyo_vid"
         video.classList.add("azyo_videoElement")
 
-        // var svg = document.createElement('svg')
-        // svg.classList.add("azyo-selfie-guide")
-        // svg.setAttribute('viewBox', "0 0 180 180")
-        // svg.setAttribute('width', 270)
-        // svg.setAttribute('height', 270)
-        // svg.setAttribute('fill', "none")
-        // svg.setAttribute('aria-hidden', true)
-        // svg.setAttribute('focusable', false)
-        // document.getElementById("test").appendChild(svg)
-
-        // var circle = document.createElement('circle')
-        // circle.setAttribute('opacity', 0.4)
-        // circle.setAttribute('cx', 90)
-        // circle.setAttribute('cy', 90)
-        // circle.setAttribute('r', 88)
-        // circle.setAttribute('stroke', 'black')
-        // circle.setAttribute('stroke-width', 4)
-        // svg.appendChild(circle)
         var img_container = document.createElement('div')
         img_container.classList.add("azyo-selfie-guide")
         
         var img = document.createElement('img')
         img.src = "manual circle.png"
-        img.height = "100%"
+        img.setAttribute('height', "100%")
 
         img_container.appendChild(img)
-
-
 
         var model_footer = document.createElement('div')
         model_footer.classList.add('modal-footer', 'azyo-moal-footer')
         
-
         var next_btn = document.createElement('button')
         next_btn.type="button"
         next_btn.classList.add('btn', 'btn-primary')

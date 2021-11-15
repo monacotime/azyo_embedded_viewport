@@ -16,17 +16,24 @@ class AzyoViewPort {
     #ends = null
     #views = null
 
-    constructor(root_div, views=null) {
-        this.root = root_div
-        if (views) {
-            register_views(views)
-        }
+    constructor(root_div, client_code, user_name, views=null) {
+        this.#init_root(root_div)
+        if (views) {register_views(views)}
+        this.client_code = client_code
+        this.user_name = user_name
+    }
+
+    #init_root(root) {
+        this.root = root
     }
 
     register_views(views, init_first=false) {
         var new_views = []
         views.forEach(view => {
-            view = new view()
+            var View_Obj = view[0]
+            var View_args = view[1]
+            View_args['creds'] = {'client_code': this.client_code, 'user_name': this.user_name}
+            view = new View_Obj(View_args)
             if (!(view instanceof AzyoView)) {
                 throw Error(view.constructor.name + ' is invalid')
             }
@@ -86,12 +93,12 @@ class AzyoViewPort {
 
 const root = document.getElementById('exampleModal')
 
-AV = new AzyoViewPort(root)
+AV = new AzyoViewPort(root, client_code="0000111100001111", user_name="test user 2")
 AV.register_views([
-    ModelView1,
-    ModelView2,
-    ModelView3,
-    ModelView4,
-    ModelView5
+    [GreetingsView, {}],
+    [SelfieView, {'VideoUtils': VideoUtils}],
+    [FrontsideView, {'VideoUtils': VideoUtils}],
+    [BacksideView, {'VideoUtils': VideoUtils}],
+    [ThankyouView, {}]
 ], true)
 AV.on_finish(() => {AV.init_first_view()})

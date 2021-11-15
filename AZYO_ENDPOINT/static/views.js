@@ -1,4 +1,8 @@
 class AzyoView {
+    constructor(args) {this.init_args(args)}
+
+    init_args(args) {this.args = args}
+
     init_view() {
         console.log('view was initialized')
     }
@@ -17,26 +21,9 @@ class AzyoView {
     }
 }
 
-class VideoView extends AzyoView {
-    render_view(root_div) {
-        var div = document.createElement('div')
-        var video = document.createElement('video')
-        this.video = video
-        video.autoplay = true
-        video.id = "azyo_vid_x"
-        video.classList.add("azyo_videoElement")
-        div.appendChild(video)
+class VideoUtils {
 
-        var btn = document.createElement('button')
-        btn.innerHTML = "Next"
-
-        root_div.appendChild(div)
-        root_div.appendChild(btn)
-        return btn
-    }
-
-    init_view() {
-        var video = this.video
+    static init_video(video) {
         if (navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ video: true })
             .then(function (stream) {
@@ -48,8 +35,7 @@ class VideoView extends AzyoView {
         }
     }
 
-    distroy_view() {
-        var video = this.video
+    static distroy_video(video) {
         var stream = video.srcObject;
         var tracks = stream.getTracks();
 
@@ -62,7 +48,7 @@ class VideoView extends AzyoView {
     }
 }
 
-class ModelView1 extends AzyoView {
+class GreetingsView extends AzyoView {
     render_view(root_div) {
         var model_wrapper = document.createElement('div')
         model_wrapper.classList.add('modal-dialog', 'modal-dialog-centered', 'modal-lg', 'azyo-modal-dialog')
@@ -97,7 +83,7 @@ class ModelView1 extends AzyoView {
 
         var model_footer = document.createElement('div')
         model_footer.classList.add('modal-footer', 'azyo-moal-footer')
-        
+
 
         var next_btn = document.createElement('button')
         next_btn.type="button"
@@ -112,13 +98,15 @@ class ModelView1 extends AzyoView {
         model_content.append(model_header, model_body, model_footer)
         model_wrapper.appendChild(model_content)
         root_div.appendChild(model_wrapper)
-        console.log(root_div)
+        
+        console.log('args', this.args)
+        console.log('model was rendered')
 
         return next_btn
     }
 }
 
-class ModelView2 extends AzyoView {
+class SelfieView extends AzyoView {
     render_view(root_div) {
         var model_wrapper = document.createElement('div')
         model_wrapper.classList.add('modal-dialog', 'modal-dialog-centered', 'modal-lg', 'azyo-modal-dialog')
@@ -202,46 +190,28 @@ class ModelView2 extends AzyoView {
         return next_btn
     }
 
-    init_view() {
-        var video = this.video
-        if (navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function (stream) {
-                video.srcObject = stream;
-            })
-            .catch(function (err0r) {
-                console.log("Something went wrong!");
-            });
-        }
-
-    }
+    init_view() {this.args['VideoUtils'].init_video(this.video)}
 
     distroy_view() {
         var photo = this.takepicture()
         var img = document.getElementById('selfie')
         img.setAttribute('src', photo)
-        this.send_image("/test_api", {"image": img, "category": "selfie"}, res => console.log(res))
-        console.log('sending selfie photo')
 
-        var video = this.video
-        var stream = video.srcObject;
-        var tracks = stream.getTracks();
+        var req_body = this.args['creds']
+        req_body['required'] = {"image": photo, "step": "SELFIE"}
+        this.send_image("/test_api/", req_body, res => console.log(res))
 
-        for (var i = 0; i < tracks.length; i++) {
-            var track = tracks[i];
-            track.stop();
-        }
-
-        video.srcObject = null;
+        this.args['VideoUtils'].distroy_video(this.video)
     }
 
     send_image(where, data, on_success) {
         $.ajax({
             url: where, 
-            data: data,
+            data: JSON.stringify(data),
             type: "POST",
             dataType: "json",
             contentType: "application/json",
+            processData: false,
             success: on_success,
             error: err => console.error('err')
         });
@@ -254,7 +224,7 @@ class ModelView2 extends AzyoView {
             this.canvas.width = width;
             this.canvas.height = height;
             this.context.drawImage(this.video, 0, 0, width, height);
-    
+
             var data = this.canvas.toDataURL('image/png');
             return data
         }
@@ -263,7 +233,7 @@ class ModelView2 extends AzyoView {
     }
 }
 
-class ModelView3 extends AzyoView {
+class FrontsideView extends AzyoView {
     render_view(root_div) {
         var model_wrapper = document.createElement('div')
         model_wrapper.classList.add('modal-dialog', 'modal-dialog-centered', 'modal-lg', 'azyo-modal-dialog')
@@ -327,36 +297,31 @@ class ModelView3 extends AzyoView {
         return next_btn
     }
 
-    init_view() {
-        var video = this.video
-        if (navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function (stream) {
-                video.srcObject = stream;
-            })
-            .catch(function (err0r) {
-                console.log("Something went wrong!");
-            });
-        }
-
-    }
+    init_view() {this.args['VideoUtils'].init_video(this.video)}
 
     distroy_view() {
         var photo = this.takepicture()
         var img = document.getElementById('selfie')
         img.setAttribute('src', photo)
-        console.log('sending selfie photo')
 
-        var video = this.video
-        var stream = video.srcObject;
-        var tracks = stream.getTracks();
+        var req_body = this.args['creds']
+        req_body['required'] = {"image": photo, "step": "FRONTSIDE"}
+        this.send_image("/test_api/", req_body, res => console.log(res))
 
-        for (var i = 0; i < tracks.length; i++) {
-            var track = tracks[i];
-            track.stop();
-        }
+        this.args['VideoUtils'].distroy_video(this.video)
+    }
 
-        video.srcObject = null;
+    send_image(where, data, on_success) {
+        $.ajax({
+            url: where, 
+            data: JSON.stringify(data),
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            processData: false,
+            success: on_success,
+            error: err => console.error('err')
+        });
     }
 
     takepicture() {
@@ -376,7 +341,7 @@ class ModelView3 extends AzyoView {
 }
 
 
-class ModelView4 extends AzyoView {
+class BacksideView extends AzyoView {
     render_view(root_div) {
         var model_wrapper = document.createElement('div')
         model_wrapper.classList.add('modal-dialog', 'modal-dialog-centered', 'modal-lg', 'azyo-modal-dialog')
@@ -416,10 +381,8 @@ class ModelView4 extends AzyoView {
         video.id = "azyo_vid"
         video.classList.add("azyo_videoElement")
 
-
         var model_footer = document.createElement('div')
         model_footer.classList.add('modal-footer', 'azyo-moal-footer')
-        
 
         var next_btn = document.createElement('button')
         next_btn.type="button"
@@ -441,36 +404,31 @@ class ModelView4 extends AzyoView {
         return next_btn
     }
 
-    init_view() {
-        var video = this.video
-        if (navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function (stream) {
-                video.srcObject = stream;
-            })
-            .catch(function (err0r) {
-                console.log("Something went wrong!");
-            });
-        }
-
-    }
+    init_view() {this.args['VideoUtils'].init_video(this.video)}
 
     distroy_view() {
         var photo = this.takepicture()
         var img = document.getElementById('selfie')
         img.setAttribute('src', photo)
-        console.log('sending selfie photo')
+        
+        var req_body = this.args['creds']
+        req_body['required'] = {"image": photo, "step": "BACKSIDE"}
+        this.send_image("/test_api/", req_body, res => console.log(res))
 
-        var video = this.video
-        var stream = video.srcObject;
-        var tracks = stream.getTracks();
+        this.args['VideoUtils'].distroy_video(this.video)
+    }
 
-        for (var i = 0; i < tracks.length; i++) {
-            var track = tracks[i];
-            track.stop();
-        }
-
-        video.srcObject = null;
+    send_image(where, data, on_success) {
+        $.ajax({
+            url: where, 
+            data: JSON.stringify(data),
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            processData: false,
+            success: on_success,
+            error: err => console.error('err')
+        });
     }
 
     takepicture() {
@@ -488,7 +446,9 @@ class ModelView4 extends AzyoView {
         return null
     }
 }
-class ModelView5 extends AzyoView {
+
+
+class ThankyouView extends AzyoView {
     render_view(root_div) {
         var model_wrapper = document.createElement('div')
         model_wrapper.classList.add('modal-dialog', 'modal-dialog-centered', 'modal-lg', 'azyo-modal-dialog')
@@ -504,7 +464,7 @@ class ModelView5 extends AzyoView {
             <span aria-hidden="true">&times;</span>
         </button>`
 
-        
+ 
         var model_body = document.createElement('div')
         model_body.classList.add("modal-body")
 
