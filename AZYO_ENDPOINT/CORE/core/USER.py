@@ -130,7 +130,7 @@ class UserDataHandler:
 
     def next_steps(self, user_data, required_data) -> dict:
         next_step = self.get_user_next_status(user_data)
-        print('>>', next_step)
+        print('>>>>', next_step)
         user_root = Path(self.UH.get_user_root(user_data))
 
         if not self.validate_step_required_data(next_step, required_data):

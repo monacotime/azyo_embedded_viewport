@@ -285,7 +285,7 @@ class SelfieView extends AzyoView {
         footer.insertBefore(next_btn, cc)
 
         // video_container.append(svg, video, canvas)
-        video_container.append(svg, video)
+        video_container.append(video)
         body.append(body_title, video_container)
         
         model_wrapper.appendChild(content)
@@ -388,8 +388,6 @@ class FrontsideView extends AzyoView {
 
     init_view() {
         this.args['VideoUtils'].init_video(this.video)
-
-
     }
 
     distroy_view() {
