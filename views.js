@@ -18,20 +18,11 @@ class AzyoViewRender {
         footer.appendChild(error)
         footer.appendChild(cc)
         
+        console.log(content)
         content = this.append_child(content, header, body, footer)
-        // Array.from([header, body, footer]).forEach(el => {
-        //     content.appendChild(el)
-        // })
+        console.log(content)
 
         return [content, header, body, footer, error]
-    }
-
-    append_child(...args) {
-        var parent = args[0]
-        Array.from(args.splice(1)).forEach(el => {
-            parent.appendChild(el)
-        })
-        return parent
     }
 
     get_azyo_header() {
@@ -73,8 +64,11 @@ class AzyoViewRender {
         return div
     }
 
-
-    append_child(...args) {}
+    append_child(...args) {
+        var parent = args[0]
+        Array.from(args.splice(1)).forEach(el => parent.appendChild(el))
+        return parent
+    }
 }
 
 
@@ -172,9 +166,6 @@ class SomeView extends AzyoView {
 
         body.innerHTML = "This will become the body of the thing"
         
-        // footer.innerHTML = "Footer Footer Footer"
-        
-
         content.appendChild(btn)
         root_div.appendChild(content)
    }
