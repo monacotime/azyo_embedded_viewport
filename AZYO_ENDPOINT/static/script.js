@@ -1,15 +1,9 @@
-function create_div(class_name, content="") {
-    var div = document.createElement('div')
-    div.classList.add(class_name)
-    if(content) div.innerHTML = content
-    return div
-}
-
 //coindcx 
 //binance
 //shufty
 //onfeedo
 //varif
+
 
 class AzyoViewPort {
     #current = 0
@@ -24,8 +18,15 @@ class AzyoViewPort {
         this.user_name = user_name
     }
 
-    #init_root(root) {
-        this.root = root
+    #init_root(root_div) {
+        this.root = root_div
+        this.root.addEventListener('next', ev=> {
+            if (ev.detail['success']) this.next()
+            else {
+                console.log('Failed', ev.detail)
+                ev.detail['view'].error_occured(ev.detail['name'], ev.detail['message'])
+            }
+        })
     }
 
     register_views(views, init_first=false) {
@@ -58,10 +59,12 @@ class AzyoViewPort {
     finished_() { return (this.#ends === this.#current)? true: false}
 
     next() {
+        console.log('next')
         if(this.finished_()) {
             this.after_finish()
         }
         else {
+            console.log('next else')
             this.#unset_view(this.#views[this.#current])
 
             var new_current = this.#current + 1
@@ -71,19 +74,29 @@ class AzyoViewPort {
         }
     }
 
+
     on_finish(do_something) {
         this.after_finish = do_something
     }
 
     #set_view(view) {
-        var next_btn = view.render_view(this.root)
-        next_btn.addEventListener('click', ev => {this.next()})
+        view.render_view(this.root)
         view.init_view()
     }
 
     #unset_view(view) {
         this.root.innerHTML = ""
         view.distroy_view()
+    }
+
+
+    get_next_event() {
+        return new CustomEvent("next", {
+            detail: {'success': true},
+            bubbles: true,
+            cancelable: true,
+            composed: false,
+        });
     }
 
 }
@@ -95,10 +108,6 @@ AV = new AzyoViewPort(root, client_code="0000111100001111", user_name="test user
 AV.register_views([
     [GreetingsView, {}],
     [SelfieView, {'VideoUtils': VideoUtils}],
-    [DocTypeView, {}],
-    [FrontsideView, {'VideoUtils': VideoUtils}],
-    [BacksideView, {'VideoUtils': VideoUtils}],
-    [GenerateResultsView, {}],
-    [ThankyouView, {}]
+    
 ], true)
 AV.on_finish(() => {AV.init_first_view()})
