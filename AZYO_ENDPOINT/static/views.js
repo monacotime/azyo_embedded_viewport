@@ -19,6 +19,19 @@ class AzyoView {
         root_div.appendChild(btn)
         return btn
     }
+
+    send_data(where, data, on_success) {
+        $.ajax({
+            url: where, 
+            data: JSON.stringify(data),
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            processData: false,
+            success: on_success,
+            error: err => console.error('err')
+        });
+    }
 }
 
 class VideoUtils {
@@ -69,8 +82,9 @@ class GreetingsView extends AzyoView {
         var model_body = document.createElement('div')
         model_body.classList.add("modal-body")
         model_body.innerHTML = `<h6>
-        Demo Inc would like to confirm your identity, a process powered by Veriff.
+        Demo Inc would like to confirm your identity.
         </h3>
+        <br>
         <h7>
             BEFORE YOU START, PLEASE:
         </h7>
@@ -98,9 +112,6 @@ class GreetingsView extends AzyoView {
         model_content.append(model_header, model_body, model_footer)
         model_wrapper.appendChild(model_content)
         root_div.appendChild(model_wrapper)
-        
-        console.log('args', this.args)
-        console.log('model was rendered')
 
         return next_btn
     }
@@ -199,22 +210,9 @@ class SelfieView extends AzyoView {
 
         var req_body = this.args['creds']
         req_body['required'] = {"image": photo, "step": "SELFIE"}
-        this.send_image("/test_api/", req_body, res => console.log(res))
+        this.send_data("/test_api/", req_body, res => console.log(res))
 
         this.args['VideoUtils'].distroy_video(this.video)
-    }
-
-    send_image(where, data, on_success) {
-        $.ajax({
-            url: where, 
-            data: JSON.stringify(data),
-            type: "POST",
-            dataType: "json",
-            contentType: "application/json",
-            processData: false,
-            success: on_success,
-            error: err => console.error('err')
-        });
     }
 
     takepicture() {
@@ -232,6 +230,56 @@ class SelfieView extends AzyoView {
         return null
     }
 }
+
+class DocTypeView extends AzyoView {
+    render_view(root_div) {
+        var model_wrapper = document.createElement('div')
+        model_wrapper.classList.add('modal-dialog', 'modal-dialog-centered', 'modal-lg', 'azyo-modal-dialog')
+        model_wrapper.role = "document"
+
+        var model_content = document.createElement('div')
+        model_content.classList.add('modal-content', 'azyo-modal-content')
+
+        var model_header = document.createElement('div')
+        model_header.classList.add('modal-header', 'azyo-modal-header')
+        model_header.innerHTML = `
+        <h5 class="modal-title" id="exampleModalLabel">Select Document Type</h5>
+        <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>`
+
+        
+        var model_body = document.createElement('div')
+        model_body.classList.add("modal-body")
+        model_body.innerHTML = `By default we passing <br> {'document_type': "LICENCE", 'country': 'IND', 'state': 'MH', "step": "DOCTYPE"}`
+
+        var model_footer = document.createElement('div')
+        model_footer.classList.add('modal-footer', 'azyo-moal-footer')
+
+        var next_btn = document.createElement('button')
+        next_btn.type="button"
+        next_btn.classList.add('btn', 'btn-primary')
+        next_btn.innerHTML = "Upload Document"
+
+        var p = document.createElement('p')
+        p.classList.add('azyo-cc')
+        p.innerHTML = "Powered by AZYO"
+
+        model_footer.append(next_btn, p)
+        model_content.append(model_header, model_body, model_footer)
+        model_wrapper.appendChild(model_content)
+        root_div.appendChild(model_wrapper)
+
+        return next_btn
+    }
+
+    distroy_view() {
+        var req_body = this.args['creds']
+        req_body['required'] = {'document_type': "LICENCE", 'country': 'IND', 'state': 'MH', "step": "DOCTYPE"}
+        this.send_data("/test_api/", req_body, res => console.log(res))
+    }
+}
+
 
 class FrontsideView extends AzyoView {
     render_view(root_div) {
@@ -273,7 +321,6 @@ class FrontsideView extends AzyoView {
         video.id = "azyo_vid"
         video.classList.add("azyo_videoElement")
 
-
         var model_footer = document.createElement('div')
         model_footer.classList.add('modal-footer', 'azyo-moal-footer')
         
@@ -306,22 +353,9 @@ class FrontsideView extends AzyoView {
 
         var req_body = this.args['creds']
         req_body['required'] = {"image": photo, "step": "FRONTSIDE"}
-        this.send_image("/test_api/", req_body, res => console.log(res))
+        this.send_data("/test_api/", req_body, res => console.log(res))
 
         this.args['VideoUtils'].distroy_video(this.video)
-    }
-
-    send_image(where, data, on_success) {
-        $.ajax({
-            url: where, 
-            data: JSON.stringify(data),
-            type: "POST",
-            dataType: "json",
-            contentType: "application/json",
-            processData: false,
-            success: on_success,
-            error: err => console.error('err')
-        });
     }
 
     takepicture() {
@@ -413,22 +447,9 @@ class BacksideView extends AzyoView {
         
         var req_body = this.args['creds']
         req_body['required'] = {"image": photo, "step": "BACKSIDE"}
-        this.send_image("/test_api/", req_body, res => console.log(res))
+        this.send_data("/test_api/", req_body, res => console.log(res))
 
         this.args['VideoUtils'].distroy_video(this.video)
-    }
-
-    send_image(where, data, on_success) {
-        $.ajax({
-            url: where, 
-            data: JSON.stringify(data),
-            type: "POST",
-            dataType: "json",
-            contentType: "application/json",
-            processData: false,
-            success: on_success,
-            error: err => console.error('err')
-        });
     }
 
     takepicture() {
@@ -444,6 +465,65 @@ class BacksideView extends AzyoView {
         }
 
         return null
+    }
+}
+
+
+class GenerateResultsView extends AzyoView {
+    render_view(root_div) {
+        var model_wrapper = document.createElement('div')
+        model_wrapper.classList.add('modal-dialog', 'modal-dialog-centered', 'modal-lg', 'azyo-modal-dialog')
+        model_wrapper.role = "document"
+
+        var model_content = document.createElement('div')
+        model_content.classList.add('modal-content', 'azyo-modal-content')
+
+        var model_header = document.createElement('div')
+        model_header.classList.add('modal-header', 'azyo-modal-header')
+        model_header.innerHTML = `
+        <h5 class="modal-title" id="exampleModalLabel">Generating Results</h5>
+        <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>`
+
+        
+        var model_body = document.createElement('div')
+        this.model_body = model_body
+        model_body.classList.add("modal-body")
+        model_body.innerHTML = `Generating results please wait for atleast 5 sec`
+
+        var model_footer = document.createElement('div')
+        model_footer.classList.add('modal-footer', 'azyo-moal-footer')
+
+        var next_btn = document.createElement('button')
+        next_btn.type="button"
+        next_btn.classList.add('btn', 'btn-primary')
+        next_btn.innerHTML = "Upload Document"
+        next_btn.style.display = "none"
+        this.next_btn = next_btn
+
+        var p = document.createElement('p')
+        p.classList.add('azyo-cc')
+        p.innerHTML = "Powered by AZYO"
+
+        model_footer.append(next_btn, p)
+        model_content.append(model_header, model_body, model_footer)
+        model_wrapper.appendChild(model_content)
+        root_div.appendChild(model_wrapper)
+
+        return next_btn
+    }
+
+    init_view() {
+        var req_body = this.args['creds']
+        req_body['required'] = {"step": "RESULTGEN"}
+
+        setTimeout(() => {
+            this.send_data("/test_api/", req_body, res => console.log(res))
+        }, 5000)
+        setTimeout(() => {
+            this.next_btn.click()
+        }, 6000)
     }
 }
 

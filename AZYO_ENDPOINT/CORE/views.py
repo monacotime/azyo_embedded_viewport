@@ -6,26 +6,22 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
-from .core.UTILS import Request
+from .models import ClientUserResults
+
+from .core.UTILS import Request, FaceRecognition
 from .core.USER import UserDataHandler, UserHandle
+
+from numpy import array
 
 
 def test(request):
     try:
-        user = {'client': '0000111100001111', 'user': 'test user 1'}
+        user_data = {'client_code': '0000111100001111', 'user_name': 'test user 2'}
         UH = UserHandle()
-        print('######', UH.register_user(user))
-        # print('######', UH.user_exists_for_client(user['user'], user['client']))
-        # print('######', UH.init_user(user['user'], user['client']))
-        # print('######', UH.validate_user(user))
-        # print('######', UH.validate_user_data(user))
-        # print('######', UH.get_client_object(user['client']), type(UH.get_client_object(user['client'])))
-        # print('######', UH.client_exists(user['client']))
-
-    except UH.UserAlreadyExists as err:
-        print('-----------> I know')
+        UDH = UserDataHandler()
+        
     except Exception as err:
-        print(err)
+        raise err
 
     return HttpResponse('HELLO')
 
@@ -75,11 +71,37 @@ class TestAPI(View):
                 default_payload['step_response'] = step_response
                 default_payload['comment'] = "Everything went well"
 
+            except UDH.UserAlreadyExistsForClient as err:
+                default_payload['status'] = 'failed'
+                default_payload['error'] = 'UserAlreadyExistsForClient'
+                default_payload['error_type'] = 'serious'
+                default_payload['error_comment'] = f'client matches with user {err.user_name}'
+
+            except UDH.FR.NoFaceDetected as err:
+                default_payload['status'] = 'failed'
+                default_payload['error'] = 'NoFaceDetected'
+                default_payload['error_type'] = 'serious'
+                default_payload['error_comment'] = 'No human face was detected inside the selfie'
+
             except UDH.StepRequiredDataInccorect as err:
                 default_payload['status'] = 'failed'
                 default_payload['error'] = 'StepRequiredDataInccorect'
                 default_payload['error_type'] = 'serious'
                 default_payload['error_comment'] = 'requirements data for the step is not correct'
+
+            except UDH.UserResultUpdateError as err:
+                default_payload['status'] = 'warn'
+                default_payload['error'] = 'UserResultUpdateError'
+                default_payload['error_type'] = '500'
+                default_payload['error_comment'] = 'this is from our side, please try after sometimes'
+                # this should not happen front end configuration failed
+            
+            except UDH.UserResultCreateError as err:
+                default_payload['status'] = 'warn'
+                default_payload['error'] = 'UserResultCreateError'
+                default_payload['error_type'] = '500'
+                default_payload['error_comment'] = 'this is from our side, please try after sometimes'
+                # this should not happen front end configuration failed
 
             except UDH.StepAssertionFailed as err:
                 default_payload['status'] = 'warn'
@@ -87,8 +109,7 @@ class TestAPI(View):
                 default_payload['error_type'] = 'Assertion'
                 default_payload['error_comment'] = 'step meta data provided in requirements incorrect with the step'
                 # this should not happen front end configuration failed
-
-            
+      
         except UH.ClientDoesNotExist as err:
             default_payload['status'] = 'failed'
             default_payload['error'] = 'ClientDoesNotExist'
@@ -122,6 +143,6 @@ class TestAPI(View):
 
         return JsonResponse(default_payload)
 
-    
+
     def post_request_parser(self, request: HttpRequest):
         return json.loads(request.body)

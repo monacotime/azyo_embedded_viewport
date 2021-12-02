@@ -1,7 +1,3 @@
-# generate a key for client
-
-
-'''
 ================================================================================
 CLIENT
 ================================================================================
@@ -16,30 +12,17 @@ CLIENT USER
 client fk = CLIENT
 user_name str req unique = username client will provide along with the request
 user_data str req unique = path where user images and results are stored
+state str = 
+country str = 
 ================================================================================
-'''
 
-user = {'client': '0000111100001111', 'user': 'test user 1', 'some': {'a': 1}}
-req = {'client': str,'user': str, 'some': {'a': 2}}
-def validate_dict(dict_body, dict_config):
-    def check_(dict_body, dict_config):
-        check = True
-        for key, value in dict_body.items():
-            if key not in dict_config:
-                check = False
-                break
 
-            if isinstance(value, dict):
-                if value == dict:
-                    check = check_(value, dict_config[key])
-                    if not check: break
-
-            else:
-                if not isinstance(value, dict_config[key]):
-                    check = False
-                    break
-
-        return check
-    return check_(dict_body, dict_config)
-
-print(validate_dict(user, req))
+================================================================================
+CLIENT USER RESULTS
+================================================================================
+client fk = CLIENT
+user fk = CLIENT USER
+kyc_number str = kyc number 16 digit generated at the end
+selfie_encoding str = generated from selfie image
+document_profile_pic str = generated from OCR
+================================================================================

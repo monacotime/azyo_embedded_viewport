@@ -1,15 +1,9 @@
-function create_div(class_name, content="") {
-    var div = document.createElement('div')
-    div.classList.add(class_name)
-    if(content) div.innerHTML = content
-    return div
-}
-
 //coindcx 
 //binance
 //shufty
 //onfeedo
 //varif
+
 
 class AzyoViewPort {
     #current = 0
@@ -18,9 +12,22 @@ class AzyoViewPort {
 
     constructor(root_div, views=null) {
         this.root = root_div
+        this.#init_root()
+        
+
         if (views) {
             register_views(views)
         }
+    }
+
+    #init_root() {
+        this.root.addEventListener('next', ev=> {
+            if (ev.detail['success']) this.next()
+            else {
+                console.log('Failed', ev.detail)
+                ev.detail['view'].error_occured(ev.detail['name'], ev.detail['message'])
+            }
+        })
     }
 
     register_views(views, init_first=false) {
@@ -71,14 +78,23 @@ class AzyoViewPort {
     }
 
     #set_view(view) {
-        var next_btn = view.render_view(this.root)
-        next_btn.addEventListener('click', ev=> {this.next()})
+        view.render_view(this.root)
         view.init_view()
     }
 
     #unset_view(view) {
         this.root.innerHTML = ""
         view.distroy_view()
+    }
+
+
+    get_next_event() {
+        return new CustomEvent("next", {
+            detail: {'success': true},
+            bubbles: true,
+            cancelable: true,
+            composed: false,
+        });
     }
 
 }
@@ -88,10 +104,6 @@ const root = document.getElementById('exampleModal')
 
 AV = new AzyoViewPort(root)
 AV.register_views([
-    ModelView1,
-    ModelView2,
-    ModelView3,
-    ModelView4,
-    ModelView5
+    SomeView
 ], true)
 AV.on_finish(() => {AV.init_first_view()})
