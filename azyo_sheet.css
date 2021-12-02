@@ -68,17 +68,10 @@
     padding: 10px;
 }
 
-.azyo-selfie-guide{
-    position: absolute;
-    height: 20%;
-    z-index: 600;
-    /* height: 70%;
-    width: 70%; */
-}
-
 .azyo-selfie-guide-image {
     position: absolute;
-    height: 40%;
+    min-height: 40%;
+    height: auto;
     z-index: 600;
     /* width: calc(100% - 120px); */
 }
