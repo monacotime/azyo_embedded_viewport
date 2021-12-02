@@ -12,6 +12,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
+    <style>
+        #drop_zone {
+            border: 5px solid blue;
+            width:  200px;
+            height: 100px;
+        }
+    </style>
 </head>
 <body>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
@@ -21,11 +28,17 @@
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <!-- from script here -->
     </div>
-
-    <img id="selfie" src="" alt="">
     <div id="test"></div>
+    <img id="selfie" src="http://103.93.17.125:5001/static/img/ims/lC7pUVhZXP5IeviR.jpg" alt="">
+    
+    <div id="drop_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+        <p>Drag one or more files to this Drop Zone ...</p>
+    </div>
 
 </body>
+    <script>
+        
+    </script>
     <script src="{% static 'views.js' %}"></script>
     <script src="{% static 'script.js' %}"></script>
 </html>

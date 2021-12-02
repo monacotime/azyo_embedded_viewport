@@ -15,6 +15,7 @@ class AzyoViewPort {
     #current = 0
     #ends = null
     #views = null
+    #STASH = []
 
     constructor(root_div, client_code, user_name, views=null) {
         this.#init_root(root_div)
@@ -57,12 +58,10 @@ class AzyoViewPort {
     finished_() { return (this.#ends === this.#current)? true: false}
 
     next() {
-        console.log('next')
         if(this.finished_()) {
             this.after_finish()
         }
         else {
-            console.log('next else')
             this.#unset_view(this.#views[this.#current])
 
             var new_current = this.#current + 1
@@ -72,14 +71,13 @@ class AzyoViewPort {
         }
     }
 
-
     on_finish(do_something) {
         this.after_finish = do_something
     }
 
     #set_view(view) {
         var next_btn = view.render_view(this.root)
-        next_btn.addEventListener('click', ev=> {this.next()})
+        next_btn.addEventListener('click', ev => {this.next()})
         view.init_view()
     }
 
@@ -97,8 +95,10 @@ AV = new AzyoViewPort(root, client_code="0000111100001111", user_name="test user
 AV.register_views([
     [GreetingsView, {}],
     [SelfieView, {'VideoUtils': VideoUtils}],
+    [DocTypeView, {}],
     [FrontsideView, {'VideoUtils': VideoUtils}],
     [BacksideView, {'VideoUtils': VideoUtils}],
+    [GenerateResultsView, {}],
     [ThankyouView, {}]
 ], true)
 AV.on_finish(() => {AV.init_first_view()})
