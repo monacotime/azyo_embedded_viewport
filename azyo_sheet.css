@@ -3,7 +3,7 @@
 }
 
 .azyo-modal-content{
-    height: 80%;
+    height: 85%;
 }
 
 .modal-body {
@@ -76,13 +76,13 @@
 
 .azyo-selfie-guide-image {
     position: absolute;
-    height: 25%;
+    height: 40%;
     z-index: 600;
     /* width: calc(100% - 120px); */
 }
 
 @media (min-width: 992px){
     .azyo-selfie-guide-image {
-        height: 40%;
+        height: 70%;
     }
 }
