@@ -644,6 +644,35 @@ class BacksideView extends AzyoView {
 
 }
 
+
+class ResultGenView extends AzyoView {
+    render_view(root_div) {
+        var [wrapper, content, header, body, footer, error, cc] = this.AVR.get_azyo_content()
+        this.error = error
+
+        header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Thank You</h5>
+        <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>`
+
+ 
+        var model_body = document.createElement('div')
+        model_body.classList.add("modal-body")
+
+        body.innerHTML = "Your verification process is complete!"
+        
+        var next_btn = document.createElement('button')
+        next_btn.type="button"
+        next_btn.classList.add('btn', 'btn-primary')
+        next_btn.innerHTML = "Thank You"
+
+        footer.insertBefore(next_btn, cc)
+
+        root_div.appendChild(wrapper)
+    }
+}
+
+
 class ThankyouView extends AzyoView {
     render_view(root_div) {
         var [wrapper, content, header, body, footer, error, cc] = this.AVR.get_azyo_content()
