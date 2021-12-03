@@ -64,6 +64,83 @@
                     <li>Check if your device’s camera is uncovered and working</li>
                     <li>Be prepared to take a selfie and photos of your ID</li>
                 </ul>
+                <br>
+                <div style="margin-left: 40px; font-size: large;">
+                    <span>
+                        <h7>
+                            Document:    
+                        </h7>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="document_type" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Select Document
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="document_type">
+                              <button class="dropdown-item" type="button">Aadhaar Card</button>
+                              <button class="dropdown-item" type="button">PAN Card</button>
+                              <button class="dropdown-item" type="button">Passport</button>
+                              <button class="dropdown-item" type="button">Driving License</button>
+                            </div>
+                          </div>
+    
+                        
+                        <script>
+                            let links = document.querySelectorAll('.dropdown-item')
+                            links.forEach(element => element.addEventListener("click", function () {
+                                let text = element.innerText
+                                document.getElementById('document_type').innerText = text
+                            }))
+                        </script>
+                    </span>
+                    <br>
+                    <span>
+                        <h7>
+                            Country:     
+                        </h7>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="country" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Select Country
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="country">
+                              <button class="dropdown-item cou" type="button">IND</button>
+                              <button class="dropdown-item cou" type="button">USA</button>
+                              <button class="dropdown-item cou" type="button">CAN</button>
+                            </div>
+                          </div>
+    
+                        
+                        <script>
+                            let stalinks = document.querySelectorAll('.cou')
+                            stalinks.forEach(element => element.addEventListener("click", function () {
+                                let text = element.innerText
+                                document.getElementById('country').innerText = text
+                            }))
+                        </script>
+                    </span>
+                    <br>
+                    <span>
+                        <h7>
+                            State:    
+                        </h7>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="state" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Select State
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="state">
+                              <button class="dropdown-item sta" type="button">Delhi</button>
+                              <button class="dropdown-item sta" type="button">Maharashtra</button>
+                              <button class="dropdown-item sta" type="button">Chennai</button>
+                            </div>
+                        </div>
+                        
+                        <script>
+                            let coulinks = document.querySelectorAll('.sta')
+                            coulinks.forEach(element => element.addEventListener("click", function () {
+                                let text = element.innerText
+                                document.getElementById('state').innerText = text
+                            }))
+                        </script>
+                    </span>
+                </div>
             </div>
             <div class="modal-footer azyo-moal-footer">
                 <button type="button" class="btn btn-primary">Start Session</button>
@@ -103,7 +180,7 @@
         </div>
     </div> -->
 
-    <!-- Modal 3 -->
+    <!-- Modal 3
     <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg azyo-modal-dialog" role="document">
         <div class="modal-content azyo-modal-content">
@@ -137,10 +214,10 @@
             </div>
         </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Modal 4 -->
-    <div class="modal fade" id="exampleModal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="exampleModal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg azyo-modal-dialog" role="document">
         <div class="modal-content azyo-modal-content">
             <div class="modal-header azyo-modal-header">
@@ -163,7 +240,7 @@
             </div>
         </div>
         </div>
-    </div>
+    </div>  -->
 
     <!-- Modal 5 -->
     <div class="modal fade" id="exampleModal5" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
