@@ -69,6 +69,10 @@ class TestAPI(View):
                 step_response = UDH.next_steps(user_data, request_data['required'])
 
                 default_payload['step_response'] = step_response
+                default_payload['status'] = 'success'
+                default_payload['error'] = ''
+                default_payload['error_type'] = ''
+                default_payload['error_comment'] = ''
                 default_payload['comment'] = "Everything went well"
 
             except UDH.UserAlreadyExistsForClient as err:

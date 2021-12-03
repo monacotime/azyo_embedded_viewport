@@ -9,6 +9,7 @@ class AzyoViewRender {
 
     get_azyo_content() {
         var content = this.create_div({'class': 'modal-content azyo-modal-content'})
+        var wrapper = this.get_azyo_content_wrapper()
         var header = this.get_azyo_header()
         var body = this.get_azyo_body()
         var footer = this.get_azyo_footer()
@@ -17,16 +18,19 @@ class AzyoViewRender {
 
         footer  = this.append_child(footer, error, cc)
         
-        console.log(content)
         content = this.append_child(content, header, body, footer)
-        console.log(content)
+        wrapper = this.append_child(wrapper, content)
 
-        return [content, header, body, footer, error, cc]
+        return [wrapper, content, header, body, footer, error, cc]
+    }
+
+    get_azyo_content_wrapper() {
+        var model_wrapper = this.create_div({'class': 'modal-dialog modal-dialog-centered modal-lg azyo-modal-dialog', 'role': 'document'})
+        return model_wrapper
     }
 
     get_azyo_header() {
         var header = this.create_div({'class': 'modal-header azyo-modal-header'})
-        header.setAttribute('style', this.style['azyo-modal-header'])
         return header
     }
 
@@ -196,12 +200,8 @@ class SomeView extends AzyoView {
 
 class GreetingsView extends AzyoView {
     render_view(root_div) {
-        var [content, header, body, footer, error, cc] = this.AVR.get_azyo_content()
+        var [wrapper, content, header, body, footer, error, cc] = this.AVR.get_azyo_content()
         this.error = error
-
-        var model_wrapper = document.createElement('div')
-        model_wrapper.classList.add('modal-dialog', 'modal-dialog-centered', 'modal-lg', 'azyo-modal-dialog')
-        model_wrapper.role = "document"
 
         header.innerHTML = `
         <h5 class="modal-title" id="exampleModalLabel">Let's get you verified</h5>
@@ -232,9 +232,7 @@ class GreetingsView extends AzyoView {
 
         footer.insertBefore(next_btn, cc)
 
-        model_wrapper.appendChild(content)
-        root_div.appendChild(model_wrapper)
-
+        root_div.appendChild(wrapper)
         return next_btn
     }
 
@@ -248,12 +246,8 @@ class GreetingsView extends AzyoView {
 
 
 class SelfieView extends AzyoView {
-    render_view(root_div) {
-        var model_wrapper = document.createElement('div')
-        model_wrapper.classList.add('modal-dialog', 'modal-dialog-centered', 'modal-lg', 'azyo-modal-dialog')
-        model_wrapper.role = "document"
-        
-        var [content, header, body, footer, error, cc] = this.AVR.get_azyo_content()
+    render_view(root_div) {    
+        var [wrapper, content, header, body, footer, error, cc] = this.AVR.get_azyo_content()
         this.error = error
 
         header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Take a selfie</h5>
@@ -284,12 +278,10 @@ class SelfieView extends AzyoView {
 
         footer.insertBefore(next_btn, cc)
 
-        // video_container.append(svg, video, canvas)
         video_container.append(video)
         body.append(body_title, video_container)
         
-        model_wrapper.appendChild(content)
-        root_div.appendChild(model_wrapper)
+        root_div.appendChild(wrapper)
     }
 
     init_view() {
@@ -303,6 +295,7 @@ class SelfieView extends AzyoView {
             req_body['required'] = {"image": photo, "step": "SELFIE"}
             console.log(req_body)
             this.send_data("/test_api/", req_body, res => {
+                console.log(res)
                 if (res['status'] !== 'success') {
                     this.detail['success'] = false
                     this.detail['name'] = res['error']
@@ -325,23 +318,14 @@ class SelfieView extends AzyoView {
 
 class FrontsideView extends AzyoView {
     render_view(root_div) {
-        var model_wrapper = document.createElement('div')
-        model_wrapper.classList.add('modal-dialog', 'modal-dialog-centered', 'modal-lg', 'azyo-modal-dialog')
-        model_wrapper.role = "document"
+        var [wrapper, content, header, body, footer, error, cc] = this.AVR.get_azyo_content()
+        this.error = error
 
-        var model_content = document.createElement('div')
-        model_content.classList.add('modal-content', 'azyo-modal-content')
-
-        var model_header = document.createElement('div')
-        model_header.classList.add('modal-header', 'azyo-modal-header')
-        model_header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Get your document's <strong>FRONT</strong> side ready</h5>
+        header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Get your document's <strong>FRONT</strong> side ready</h5>
         <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>`
 
-        
-        var model_body = document.createElement('div')
-        model_body.classList.add("modal-body")
 
         var body_title = document.createElement('h6')
         body_title.classList.add("azyo-modal-body-title")
@@ -349,11 +333,6 @@ class FrontsideView extends AzyoView {
 
         var video_container = document.createElement('div')
         video_container.classList.add("azyo_video_container")
-
-        var canvas = document.createElement('canvas')
-        canvas.style.display = 'none'
-        this.canvas = canvas
-        this.context = canvas.getContext('2d')
 
         var video = document.createElement('video')
         this.video = video
@@ -363,57 +342,213 @@ class FrontsideView extends AzyoView {
         video.id = "azyo_vid"
         video.classList.add("azyo_videoElement")
 
-        var model_footer = document.createElement('div')
-        model_footer.classList.add('modal-footer', 'azyo-moal-footer')
         
+        var flipcart = document.createElement('div')
+        flipcart.setAttribute('class', "flip-card")
+        flipcart.setAttribute('id', "allcard")
+        flipcart.setAttribute('style', "position:absolute; opacity: 0.6; display: block;")
+        flipcart.innerHTML = `
+        <div class="flip-card-inner">
+            <div class="flip-card-front">
+                <img id = "frontpiccard" src="https://raw.githubusercontent.com/monacotime/azyo_embedded_viewport/main/cardfront.png" alt="Avatar" style="width:370px;height:250px;">
+            </div>
+        </div>
+        `
 
         var next_btn = document.createElement('button')
         next_btn.type="button"
         next_btn.classList.add('btn', 'btn-primary')
         next_btn.innerHTML = "Take Photo"
+        this.next_btn = next_btn
 
-        var p = document.createElement('p')
-        p.classList.add('azyo-cc')
-        p.innerHTML = "Powered by AZYO"
 
-        model_footer.append(next_btn, p)
-        video_container.append(video, canvas)
-        model_body.append(body_title, video_container)
-        model_content.append(model_header, model_body, model_footer)
-        model_wrapper.appendChild(model_content)
-        root_div.appendChild(model_wrapper)
+        footer.insertBefore(next_btn, cc)
 
-        return next_btn
+        video_container.append(flipcart, video)
+        body.append(body_title, video_container)
+
+        root_div.appendChild(wrapper)
     }
 
     init_view() {
         this.args['VideoUtils'].init_video(this.video)
+
+        document.getElementById("allcard").style.display = "none";
+        function hide() {
+            document.getElementById("allcard").style.display = "none";
+        }
+
+        function disp(){
+            document.getElementById('allcard').style.display = "block"
+        }
+
+        function rotates(){
+            setTimeout(disp, 500);
+            setTimeout(hide, 2500);
+        }
+
+        this.video.addEventListener('play', ev=> {
+            rotates()
+        })
+
+        this.next_btn.addEventListener('click', ev => {
+
+            var photo = this.args['VideoUtils'].takepicture(this.video)
+
+            var req_body = this.args['creds']
+            req_body['required'] = {"image": photo, "step": "FRONTSIDE"}
+            this.send_data("/test_api/", req_body, res => {
+                if (res['status'] !== 'success') {
+                    this.detail['success'] = false
+                    this.detail['name'] = res['error']
+                    this.detail['message'] = res['error_comment']
+                    this.next_btn.dispatchEvent(this.get_next_event(this.detail))
+                }
+                else {
+                    this.detail['success'] = true
+                    this.next_btn.dispatchEvent(this.get_next_event(this.detail))
+                }
+            })
+        })
+    
     }
 
     distroy_view() {
-        var photo = this.takepicture()
-        var img = document.getElementById('selfie')
-        img.setAttribute('src', photo)
+        this.args['VideoUtils'].distroy_video(this.video)
+    }
+}
 
-        var req_body = this.args['creds']
-        req_body['required'] = {"image": photo, "step": "FRONTSIDE"}
-        this.send_data("/test_api/", req_body, res => console.log(res))
 
+class BacksideView extends AzyoView {
+    render_view(root_div) {
+        var [wrapper, content, header, body, footer, error, cc] = this.AVR.get_azyo_content()
+        this.error = error
+
+        var header = document.createElement('div')
+        header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Turn your ID card for capturing <strong>BACK</strong> side</h5>
+        <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>`
+
+        var body_title = document.createElement('h6')
+        body_title.classList.add("azyo-modal-body-title")
+        body_title.innerHTML = "Make sure your document is inside the frame"
+
+        var video_container = document.createElement('div')
+        video_container.classList.add("azyo_video_container")
+
+        var video = document.createElement('video')
+        this.video = video
+        video.width = 640
+        video.height = 480
+        video.autoplay = "true"
+        video.id = "azyo_vid"
+        video.classList.add("azyo_videoElement")
+
+        var flipcart = document.createElement('div')
+        flipcart.setAttribute('class', "flip-card")
+        flipcart.setAttribute('id', "allcard")
+        flipcart.setAttribute('style', "position:absolute; opacity: 0.6; display: block;")
+        flipcart.innerHTML = `
+        <div class="flip-card-inner">
+            <div class="flip-card-front">
+                <img id = "frontpiccard" src="https://raw.githubusercontent.com/monacotime/azyo_embedded_viewport/main/cardfront.png" alt="Avatar" style="width:370px;height:250px;">
+            </div>
+            <div class="flip-card-back">
+                <img id = "backpiccard" src="https://raw.githubusercontent.com/monacotime/azyo_embedded_viewport/main/cardback.png" alt="Avatar" style="width:370px;height:250px;">
+            </div>
+        </div>
+        `
+
+        var next_btn = document.createElement('button')
+        next_btn.type="button"
+        next_btn.classList.add('btn', 'btn-primary')
+        next_btn.innerHTML = "Take Photo"
+        this.next_btn = next_btn
+
+        footer.insertBefore(next_btn, cc)
+
+        video_container.append(flipcart, video)
+        body.append(body_title, video_container)
+        root_div.appendChild(wrapper)
+    }
+
+    init_view() {
+        this.args['VideoUtils'].init_video(this.video)
+        
+        document.getElementById("allcard").style.display = "none";
+        function animate() {
+            var card = document.querySelector('.flip-card-inner');
+            card.classList.toggle('is-flipped');
+        }
+        function hide() {
+            document.getElementById("allcard").style.display = "none";
+        }
+        function disp(){
+            document.getElementById('allcard').style.display = "block"
+        }
+
+        function rotates(){
+            setTimeout(disp, 150)
+            setTimeout(animate, 1000);
+            setTimeout(hide, 3000);
+        }
+
+        this.video.addEventListener('play', ev=> {
+            rotates()
+        })
+
+        this.next_btn.addEventListener('click', ev => {
+
+            var photo = this.args['VideoUtils'].takepicture(this.video)
+
+            var req_body = this.args['creds']
+            req_body['required'] = {"image": photo, "step": "BACKSIDE"}
+            console.log(req_body)
+            this.send_data("/test_api/", req_body, res => {
+                if (res['status'] !== 'success') {
+                    this.detail['success'] = false
+                    this.detail['name'] = res['error']
+                    this.detail['message'] = res['error_comment']
+                    this.next_btn.dispatchEvent(this.get_next_event(this.detail))
+                }
+                else {
+                    this.detail['success'] = true
+                    this.next_btn.dispatchEvent(this.get_next_event(this.detail))
+                }
+            })
+        })
+    }
+
+    distroy_view() {
         this.args['VideoUtils'].distroy_video(this.video)
     }
 
-    takepicture() {
-        var height = this.video.height
-        var width = this.video.width
-        if (width && height) {
-            this.canvas.width = width;
-            this.canvas.height = height;
-            this.context.drawImage(this.video, 0, 0, width, height);
-    
-            var data = this.canvas.toDataURL('image/png');
-            return data
-        }
+}
 
-        return null
+class ThankyouView extends AzyoView {
+    render_view(root_div) {
+        var [wrapper, content, header, body, footer, error, cc] = this.AVR.get_azyo_content()
+        this.error = error
+
+        header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Thank You</h5>
+        <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>`
+
+ 
+        var model_body = document.createElement('div')
+        model_body.classList.add("modal-body")
+
+        body.innerHTML = "Your verification process is complete!"
+        
+        var next_btn = document.createElement('button')
+        next_btn.type="button"
+        next_btn.classList.add('btn', 'btn-primary')
+        next_btn.innerHTML = "Thank You"
+
+        footer.insertBefore(next_btn, cc)
+
+        root_div.appendChild(wrapper)
     }
 }

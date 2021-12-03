@@ -108,7 +108,8 @@ class UserDataHandler:
     FR = FaceRecognition()
     OCR = AzyoOCRService()
 
-    event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'RESULTGEN', 'RESULT', 'FINISHED']
+    # event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'RESULTGEN', 'RESULT', 'FINISHED']
+    event_data_order = ['INITIALIZED', 'SELFIE', 'FRONTSIDE', 'BACKSIDE', 'RESULT', 'FINISHED']
 
     __result_status_next: dict
 
@@ -123,21 +124,20 @@ class UserDataHandler:
 
     def __init__(self) -> None:
         self.__result_status_next = self.__init_result_status_next()
-        print('>>', self.__result_status_next)
 
     class StepRequiredDataInccorect(Exception): pass
     class StepAssertionFailed(Exception): pass
 
     def next_steps(self, user_data, required_data) -> dict:
         next_step = self.get_user_next_status(user_data)
-        print('>>>>', next_step)
         user_root = Path(self.UH.get_user_root(user_data))
+
+        print('##', next_step, required_data['step'])
+        if next_step != required_data['step']:
+            raise self.StepAssertionFailed('step meta received in the requirements does not match next steps')
 
         if not self.validate_step_required_data(next_step, required_data):
             raise self.StepRequiredDataInccorect('Incorrect requirements for the data')
-
-        # if next_step != required_data['step']:
-        #     raise self.StepAssertionFailed('step meta received in the requirements does not match next steps')
 
         next_steps_where_performed = True
 
@@ -288,6 +288,7 @@ class UserDataHandler:
 
         except self.FR.NoFaceDetected as err:
             user_selfie_path.unlink()
+            print('*', user_selfie_path.exists())
             raise err
 
     def get_all_selfie_result_for_user_client_generator(self, user_data):

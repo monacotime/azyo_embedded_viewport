@@ -108,6 +108,8 @@ AV = new AzyoViewPort(root, client_code="0000111100001111", user_name="test user
 AV.register_views([
     [GreetingsView, {}],
     [SelfieView, {'VideoUtils': VideoUtils}],
-    
+    [FrontsideView, {'VideoUtils': VideoUtils}],
+    [BacksideView, {'VideoUtils': VideoUtils}],
+    [ThankyouView, {}],
 ], true)
 AV.on_finish(() => {AV.init_first_view()})
