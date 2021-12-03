@@ -4,12 +4,18 @@
 //onfeedo
 //varif
 
+var jquery = document.createElement('script')
+jquery.setAttribute('src', "https://code.jquery.com/jquery-3.6.0.js")
+jquery.setAttribute('integrity', "sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=")
+jquery.setAttribute('crossorigin', "anonymous")
+// console.log(document.getElementById('exampleModal'))
+document.getElementById('exampleModal').appendChild(jquery)
+
 
 class AzyoViewPort {
     #current = 0
     #ends = null
     #views = null
-    #STASH = []
 
     constructor(root_div, client_code, user_name, views=null) {
         this.#init_root(root_div)
@@ -108,6 +114,7 @@ AV = new AzyoViewPort(root, client_code="0000111100001111", user_name="test user
 AV.register_views([
     [GreetingsView, {}],
     [SelfieView, {'VideoUtils': VideoUtils}],
+    [DocTypeView, {}],
     [FrontsideView, {'VideoUtils': VideoUtils}],
     [BacksideView, {'VideoUtils': VideoUtils}],
     [ThankyouView, {}],

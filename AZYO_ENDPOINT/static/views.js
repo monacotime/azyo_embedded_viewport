@@ -174,30 +174,6 @@ class VideoUtils {
     }
 }
 
-
-class SomeView extends AzyoView {
-   render_view(root_div) {
-        var btn = document.createElement('btn')
-        btn.classList = ['btn btn-primary']
-        btn.innerHTML = 'Trigger NEXT'
-
-        btn.addEventListener('click', ev => {
-            btn.dispatchEvent(this.get_next_event({'success': false, 'name': '505', 'message': 'oops!!', 'view': this}))
-        })
-
-        var [content, header, body, footer, error, cc] = this.AVR.get_azyo_content()
-        this.error = error
-
-        header.innerHTML = "Some Example Sample View"
-
-        body.innerHTML = "This will become the body of the thing"
-        
-        content.appendChild(btn)
-        root_div.appendChild(content)
-   }
-}
-
-
 class GreetingsView extends AzyoView {
     render_view(root_div) {
         var [wrapper, content, header, body, footer, error, cc] = this.AVR.get_azyo_content()
@@ -312,6 +288,148 @@ class SelfieView extends AzyoView {
 
     distroy_view() {
         this.args['VideoUtils'].distroy_video(this.video)
+    }
+}
+
+class DocTypeView extends AzyoView {
+    render_view(root_div) {
+        var [wrapper, content, header, body, footer, error, cc] = this.AVR.get_azyo_content()
+        this.error = error
+
+        header.innerHTML = `
+        <h5 class="modal-title" id="exampleModalLabel">Select Document Type</h5>
+        <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>`
+
+        body.innerHTML = `
+        <h6>Prepare a valid government-issued identity document</h6>
+        <br>
+        <div style="margin-left: 40px;">
+            <span>
+                <h7>
+                    Document:    
+                </h7>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="document_type" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Select Document
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="document_type">
+                      <button class="dropdown-item tp" type="button">#Aadhaar Card</button>
+                      <button class="dropdown-item tp" type="button">#PAN Card</button>
+                      <button class="dropdown-item tp" type="button">#Passport</button>
+                      <button class="dropdown-item tp" type="button">LICENCE</button>
+                    </div>
+                  </div>
+
+                
+                <script>
+                    
+                </script>
+            </span>
+            <br>
+            <span>
+                <h7>
+                    Country:     
+                </h7>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="country" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Select Country
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="country">
+                      <button class="dropdown-item cou" type="button">IND</button>
+                      <button class="dropdown-item cou" type="button">#USA</button>
+                      <button class="dropdown-item cou" type="button">#CAN</button>
+                    </div>
+                  </div>
+
+                
+                <script>
+                    
+                </script>
+            </span>
+            <br>
+            <span>
+                <h7>
+                    State:    
+                </h7>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="state" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Select State
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="state">
+                      <button class="dropdown-item sta" type="button">#Delhi</button>
+                      <button class="dropdown-item sta" type="button">MH</button>
+                      <button class="dropdown-item sta" type="button">#Chennai</button>
+                    </div>
+                </div>
+                
+                <script>
+                    
+                </script>
+            </span>
+        </div>`
+
+        var next_btn = document.createElement('button')
+        next_btn.type="button"
+        next_btn.classList.add('btn', 'btn-primary')
+        next_btn.innerHTML = "Upload Document"
+        this.next_btn = next_btn
+
+        footer.insertBefore(next_btn, cc)
+        
+        root_div.appendChild(wrapper)
+    }
+
+    init_view() {
+        let links = document.querySelectorAll('.tp')
+        let doctype = document.getElementById('document_type')
+        links.forEach(element => element.addEventListener("click", function () {
+            let text = element.innerText
+            doctype.innerText = text
+        }))
+
+        let coulinks = document.querySelectorAll('.sta')
+        let state = document.getElementById('state')
+        coulinks.forEach(element => element.addEventListener("click", function () {
+            let text = element.innerText
+            state.innerText = text
+        }))
+
+        let stalinks = document.querySelectorAll('.cou')
+        let country = document.getElementById('country')
+        stalinks.forEach(element => element.addEventListener("click", function () {
+            let text = element.innerText
+            country.innerText = text
+        }))
+
+
+        this.next_btn.addEventListener('click', ev => {
+
+            var req_body = this.args['creds']
+            req_body['required'] = {'document_type': doctype.innerText, 'country': country.innerText, 'state': state.innerText, "step": "DOCTYPE"}
+            console.log(req_body)
+            this.send_data("/test_api/", req_body, res => {
+                console.log(res)
+                if (res['status'] !== 'success') {
+                    this.detail['success'] = false
+                    this.detail['name'] = res['error']
+                    this.detail['message'] = res['error_comment']
+                    this.next_btn.dispatchEvent(this.get_next_event(this.detail))
+                }
+                else {
+                    this.detail['success'] = true
+                    this.next_btn.dispatchEvent(this.get_next_event(this.detail))
+                }
+            })
+        })
+
+    }
+
+    distroy_view() {
+        // var req_body = this.args['creds']
+        // req_body['required'] = {'document_type': "LICENCE", 'country': 'IND', 'state': 'MH', "step": "DOCTYPE"}
+        // this.send_data("/test_api/", req_body, res => console.log(res))
     }
 }
 

@@ -108,8 +108,9 @@ class UserDataHandler:
     FR = FaceRecognition()
     OCR = AzyoOCRService()
 
-    # event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'RESULTGEN', 'RESULT', 'FINISHED']
-    event_data_order = ['INITIALIZED', 'SELFIE', 'FRONTSIDE', 'BACKSIDE', 'RESULT', 'FINISHED']
+    # event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'FINISHED', 'RESULTGEN', 'RESULT', ]
+    event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'FINISHED']
+    # event_data_order = ['INITIALIZED', 'SELFIE', 'FRONTSIDE', 'BACKSIDE', 'RESULT', 'FINISHED']
 
     __result_status_next: dict
 

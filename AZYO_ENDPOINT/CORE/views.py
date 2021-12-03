@@ -113,6 +113,12 @@ class TestAPI(View):
                 default_payload['error_type'] = 'Assertion'
                 default_payload['error_comment'] = 'step meta data provided in requirements incorrect with the step'
                 # this should not happen front end configuration failed
+
+            except UH.UserCreationError as err:
+                default_payload['status'] = 'failed'
+                default_payload['error'] = 'UserCreationError'
+                default_payload['error_type'] = '500'
+                default_payload['error_comment'] = 'this is from our side, please try after sometimes'
       
         except UH.ClientDoesNotExist as err:
             default_payload['status'] = 'failed'

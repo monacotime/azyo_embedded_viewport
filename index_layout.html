@@ -75,16 +75,16 @@
                               Select Document
                             </button>
                             <div class="dropdown-menu" aria-labelledby="document_type">
-                              <button class="dropdown-item" type="button">Aadhaar Card</button>
-                              <button class="dropdown-item" type="button">PAN Card</button>
-                              <button class="dropdown-item" type="button">Passport</button>
-                              <button class="dropdown-item" type="button">Driving License</button>
+                              <button class="dropdown-item tp" type="button">Aadhaar Card</button>
+                              <button class="dropdown-item tp" type="button">PAN Card</button>
+                              <button class="dropdown-item tp" type="button">Passport</button>
+                              <button class="dropdown-item tp" type="button">Driving License</button>
                             </div>
                           </div>
     
                         
                         <script>
-                            let links = document.querySelectorAll('.dropdown-item')
+                            let links = document.querySelectorAll('.tp')
                             links.forEach(element => element.addEventListener("click", function () {
                                 let text = element.innerText
                                 document.getElementById('document_type').innerText = text
