@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="azyo_sheet.css" rel="stylesheet" />
     <link href="azyo_flipcard.css" rel="stylesheet" />
+    <script
+    src="https://code.jquery.com/jquery-3.6.0.js"
+    integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous"></script>
 </head>
 <body>
     <!-- Button trigger modal -->
@@ -30,7 +34,7 @@
         view 4
     </button>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal5">
-        view 4 result
+        view 5 result
     </button>
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal99">
@@ -256,6 +260,72 @@
                 <h6 class="azyo-modal-body-title">
                     Please wait while we analyse your images
                 </h6>
+                <br>
+                <div>
+                    <div class = "azyo-instr">
+                        Processing Your Selfie
+                    </div>
+                    <div class="col-xs-12 col-sm-12 progress-container">
+                        <div class="progress progress-striped active">
+                            <div class="progress-bar progress-bar-success" style="width:0%"></div>
+                        </div>
+                    </div>
+
+                    <script>
+                        $(".progress-bar")
+                        .animate({
+                            width: "0%"
+                        }, 2000)
+                        .animate({
+                            width: "70%"
+                        }, 5000)
+                        .animate({
+                            width: "100%"
+                        }, 2000);
+                    </script>
+                </div>
+
+                <div>
+                    <div class = "azyo-instr">
+                        Extracting Document Details
+                    </div>
+                    <div class="col-xs-12 col-sm-12 progress-container">
+                        <div class="progress progress-striped active">
+                            <div class="progress-bar progress-bar-success" style="width:0%"></div>
+                        </div>
+                    </div>
+
+                    <script>
+                        $(".progress-bar")
+                        .animate({
+                            width: "70%"
+                        }, 5000)
+                        .animate({
+                            width: "100%"
+                        }, 2000);
+                    </script>
+                </div>
+
+                <div>
+                    <div class = "azyo-instr">
+                        Validating Results
+                    </div>
+                    <div class="col-xs-12 col-sm-12 progress-container">
+                        <div class="progress progress-striped active">
+                            <div class="progress-bar progress-bar-success" style="width:0%"></div>
+                        </div>
+                    </div>
+
+                    <script>
+                        $(".progress-bar")
+                        .animate({
+                            width: "70%"
+                        }, 5000)
+                        .animate({
+                            width: "100%"
+                        }, 2000);
+                    </script>
+                </div>
 
             </div>
             <div class="modal-footer azyo-moal-footer">
@@ -280,7 +350,6 @@
                 <h6 class="azyo-modal-body-title">
                     Please wait while we calculate your results
                 </h6>
-
 
             </div>
             <div class="modal-footer azyo-moal-footer">
