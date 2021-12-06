@@ -315,9 +315,7 @@ class DocTypeView extends AzyoView {
                     <li>Check if your device’s camera is uncovered and working</li>
                     <li>Be prepared to take a selfie and photos of your ID</li>
                 </ul>
-                <br>
                 <div style="margin-left: 40px; font-size: large;">
-                    <br>
                     <span>
                         <h7>
                             Country:     
