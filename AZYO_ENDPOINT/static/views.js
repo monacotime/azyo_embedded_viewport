@@ -702,6 +702,7 @@ class ResultGenView extends AzyoView {
         `
         
         var next_btn = document.createElement('button')
+        this.next_btn = next_btn
         next_btn.type="button"
         next_btn.classList.add('btn', 'btn-primary')
         next_btn.innerHTML = "Thank You"

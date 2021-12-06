@@ -138,7 +138,7 @@ class UserDataHandler(UserHandle):
     OCR = AzyoOCRService()
     DH = DocumentHandler()
 
-    event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'FINISHED', 'RESULTGEN']
+    event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'RESULTGEN', 'FINISHED']
     # event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'FINISHED']
     # event_data_order = ['INITIALIZED', 'DOCTYPE', 'RESULTGEN']
     # event_data_order = ['INITIALIZED', 'SELFIE', 'FRONTSIDE', 'BACKSIDE', 'RESULT', 'FINISHED']
