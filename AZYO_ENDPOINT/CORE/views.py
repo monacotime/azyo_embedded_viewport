@@ -92,6 +92,12 @@ class TestAPI(View):
                 default_payload['error'] = 'StepRequiredDataInccorect'
                 default_payload['error_type'] = 'serious'
                 default_payload['error_comment'] = 'requirements data for the step is not correct'
+            
+            except UDH.DocumentManagementError as err:
+                default_payload['status'] = 'failed'
+                default_payload['error'] = 'DocumentManagementError'
+                default_payload['error_type'] = 'serious'
+                default_payload['error_comment'] = 'state invalid for country'
 
             except UDH.UserResultUpdateError as err:
                 default_payload['status'] = 'warn'

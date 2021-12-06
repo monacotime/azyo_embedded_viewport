@@ -9,7 +9,8 @@ jquery.setAttribute('src', "https://code.jquery.com/jquery-3.6.0.js")
 jquery.setAttribute('integrity', "sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=")
 jquery.setAttribute('crossorigin', "anonymous")
 // console.log(document.getElementById('exampleModal'))
-document.getElementById('exampleModal').appendChild(jquery)
+document.getElementsByTagName('head')[0].appendChild(jquery)
+console.log(document.getElementsByTagName('head')[0])
 
 
 class AzyoViewPort {
@@ -117,6 +118,7 @@ AV.register_views([
     [DocTypeView, {}],
     [FrontsideView, {'VideoUtils': VideoUtils}],
     [BacksideView, {'VideoUtils': VideoUtils}],
+    [ResultGenView, {}],
     [ThankyouView, {}],
 ], true)
 AV.on_finish(() => {AV.init_first_view()})

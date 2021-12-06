@@ -1,5 +1,6 @@
+from os import stat
 from django.core import exceptions
-from ..models import Client, ClientUser, ClientUserResults
+from ..models import Client, ClientUser, ClientUserResults, Country, State, DocumentType, Document
 from django.db.models import Q
 from .UTILS import AzyoOCRService, Request, FaceRecognition
 from pathlib import Path
@@ -58,7 +59,8 @@ class UserHandle:
         client_obj = self.get_client_object(client)
         user_root = self.__make_user_root(user, client_obj)
         try: self.__save_user_raw(user, client_obj, user_root)
-        except Exception as err: raise self.UserCreationError('Error creating the user')
+        except Exception as err: 
+            raise self.UserCreationError('Error creating the user')
 
     def __save_user_raw(self, user_name, client_obj, user_root):
         # Not to be used outside validations not added
@@ -103,13 +105,42 @@ class UserHandle:
         return Client.objects.filter(client=client).first()
 
 
-class UserDataHandler:
-    UH = UserHandle()
+class DocumentHandler():
+    def get_country(self, code) -> Country:
+        country_obj = Country.objects.filter(code=code).first()
+        if not country_obj: return None
+
+        return country_obj
+
+    def get_state(self, code) -> State:
+        state_obj = State.objects.filter(code=code).first()
+        if not state_obj: return None
+
+        return state_obj
+
+    def get_document_type(self, code) -> DocumentType:
+        doctype_obj = DocumentType.objects.filter(code=code).first()
+        if not doctype_obj: return None
+
+        return doctype_obj
+
+    class DocumnetCreationError(Exception): pass
+    def create_document(self, state_obj, doctype_obj):
+        doc_obj = Document()
+        doc_obj.state = state_obj
+        doc_obj.documnet_type = doctype_obj
+        Document.save(doc_obj)
+        return doc_obj
+
+
+class UserDataHandler(UserHandle):
     FR = FaceRecognition()
     OCR = AzyoOCRService()
+    DH = DocumentHandler()
 
-    # event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'FINISHED', 'RESULTGEN', 'RESULT', ]
-    event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'FINISHED']
+    event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'FINISHED', 'RESULTGEN', 'RESULT']
+    # event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'FINISHED']
+    # event_data_order = ['INITIALIZED', 'DOCTYPE']
     # event_data_order = ['INITIALIZED', 'SELFIE', 'FRONTSIDE', 'BACKSIDE', 'RESULT', 'FINISHED']
 
     __result_status_next: dict
@@ -120,7 +151,7 @@ class UserDataHandler:
         'FRONTSIDE': {'image': str, 'step': str},
         'BACKSIDE': {'image': str, 'step': str},
         'RESULTGEN': {'step': str},
-        'RESULT': {'image': str, 'step': str}, # Not decided yet
+        'RESULT': {'step': str}, # Not decided yet # canceled lol!
     }
 
     def __init__(self) -> None:
@@ -131,7 +162,7 @@ class UserDataHandler:
 
     def next_steps(self, user_data, required_data) -> dict:
         next_step = self.get_user_next_status(user_data)
-        user_root = Path(self.UH.get_user_root(user_data))
+        user_root = Path(self.get_user_root(user_data))
 
         print('##', next_step, required_data['step'])
         if next_step != required_data['step']:
@@ -146,13 +177,7 @@ class UserDataHandler:
             self.selfie_step(user_root, user_data, required_data)
 
         elif next_step=='DOCTYPE':
-            user_obj = self.UH.get_user(user_data)
-            try:
-                user_obj.country_code = required_data['country']
-                user_obj.state_code = required_data['state']
-                user_obj.document_type = required_data['document_type']
-                user_obj.save()
-            except Exception as err: raise self.UH.UserCreationError('user update error actualy!!')
+            self.doctype_step(user_data, required_data)
 
         elif next_step=="FRONTSIDE":
             user_frontside_path = user_root / f"{user_data['user_name']}_frontside.png"
@@ -163,7 +188,8 @@ class UserDataHandler:
             self.save_base64str_to_file(required_data['image'], str(user_backside_path))
 
         elif next_step=='RESULTGEN':
-            self.ocr_step(user_root, user_data, required_data)
+            # self.ocr_step(user_root, user_data, required_data)
+            pass
 
         elif next_step=="RESULT": pass
             # next steps here
@@ -176,7 +202,7 @@ class UserDataHandler:
         print('# updating result status >>', next_steps_where_performed)
         if next_steps_where_performed:
             print('# updating result status')
-            self.UH.update_user_result_status(next_step, user_data)
+            self.update_user_result_status(next_step, user_data)
 
         return {'comment': 'everything went well!'}
 
@@ -195,6 +221,33 @@ class UserDataHandler:
                 user_name = user_results.user.user_name
                 raise self.UserAlreadyExistsForClient(user_name)
 
+    ''' -----------------------------------  DOCTYPE step ----------------------------------- '''
+    
+    class DocumentManagementError(Exception): pass
+    def doctype_step(self, user_data, required_data):
+        country_obj = self.DH.get_country(required_data['country'])
+        state_obj = self.DH.get_state(required_data['state'])
+        document_obj = self.DH.get_document_type(required_data['document_type'])
+
+        if country_obj and state_obj: 
+            if country_obj != state_obj.country:
+                raise self.DocumentManagementError('state and country do not match')
+        else: raise self.DocumentManagementError('country or state does not exist')
+        
+        try:
+            doc_obj = self.DH.create_document(state_obj, document_obj)
+        except:
+            raise self.DH.DocumnetCreationError('document creation error')
+
+        try:
+            user_obj = self.get_user(user_data)
+            user_obj.document = doc_obj
+            user_obj.save()
+        except Exception as err: raise self.UserCreationError('user update error actualy!!')
+
+    ''' -----------------------------------  DOCTYPE step ----------------------------------- '''
+
+
     ''' -----------------------------------   OCR step ----------------------------------- '''
 
     class AZYOOCRFailed(Exception): pass
@@ -207,7 +260,7 @@ class UserDataHandler:
         # get ocr data
         user_name = user_data['user_name']
         client_code = user_data['client_code']
-        user_obj = self.UH.get_user(user_data)
+        user_obj = self.get_user(user_data)
         data_config = {
             "document_type": user_obj.document_type, # LICENCE
             "country": user_obj.country_code, # IN
@@ -251,14 +304,14 @@ class UserDataHandler:
         # update results with match distance from ocr
 
     def get_user_doc_frontside_image_path(self, user_data, check_if_exists=False, return_as_str=True):
-        user_obj = self.UH.get_user(user_data)
+        user_obj = self.get_user(user_data)
         if not user_obj: return None
 
         frontside_path = Path(user_obj.user_data) / f"{user_obj.user_name}_frontside.png"
         return frontside_path
 
     def get_user_doc_backside_image_path(self, user_data, check_if_exists=False, return_as_str=True):
-        user_obj = self.UH.get_user(user_data)
+        user_obj = self.get_user(user_data)
         if not user_obj: return None
 
         backside_path = Path(user_obj.user_data) / f"{user_obj.user_name}_backside.png"
@@ -293,7 +346,7 @@ class UserDataHandler:
             raise err
 
     def get_all_selfie_result_for_user_client_generator(self, user_data):
-        user_obj = self.UH.get_user(user_data)
+        user_obj = self.get_user(user_data)
         if not user_obj: return None
 
         client_obj = user_obj.client
@@ -303,7 +356,7 @@ class UserDataHandler:
 
 
     def get_all_selfie_result_encodings_for_user_client(self, user_data):
-        user_obj = self.UH.get_user(user_data)
+        user_obj = self.get_user(user_data)
         if not user_obj: return None
 
         client_obj = user_obj.client
@@ -327,13 +380,13 @@ class UserDataHandler:
 
 
     def get_user_results(self, user_data) -> ClientUserResults:
-        user_obj = self.UH.get_user(user_data)
+        user_obj = self.get_user(user_data)
         if not user_obj: return None
 
         return ClientUserResults.objects.filter(user=user_obj).first()
 
     def get_user_next_status(self, user_data):
-        current_status = self.UH.get_user_result_status(user_data)
+        current_status = self.get_user_result_status(user_data)
         if not current_status: return None
         return self.__result_status_next[current_status]
     
@@ -345,7 +398,7 @@ class UserDataHandler:
 
     class UserResultCreateError(Exception): pass
     def create_result_raw(self, user_data):
-        user_obj =  self.UH.get_user(user_data)
+        user_obj =  self.get_user(user_data)
         if not user_obj: return None
 
         results = ClientUserResults()
@@ -355,7 +408,7 @@ class UserDataHandler:
 
 
     def get_user_selfie_image_path(self, user_data, check_if_exists=False, return_as_str=True):
-        user_obj = self.UH.get_user(user_data)
+        user_obj = self.get_user(user_data)
         if not user_obj: return None
 
         selfie_path = Path(user_obj.user_data) / f"{user_obj.user_name}_selfie.png"

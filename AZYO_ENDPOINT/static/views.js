@@ -650,16 +650,82 @@ class ResultGenView extends AzyoView {
         var [wrapper, content, header, body, footer, error, cc] = this.AVR.get_azyo_content()
         this.error = error
 
-        header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Thank You</h5>
+        header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Processing your data</h5>
         <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>`
 
- 
-        var model_body = document.createElement('div')
-        model_body.classList.add("modal-body")
+        body.innerHTML = `
+        <h6 class="azyo-modal-body-title">
+                    Please wait while we analyse your images
+                </h6>
+                <br>
+                <div>
+                    <div class = "azyo-instr">
+                        Processing Your Selfie
+                    </div>
+                    <div class="col-xs-12 col-sm-12 progress-container">
+                        <div class="progress progress-striped active">
+                            <div class="progress-bar progress-bar-success" style="width:0%"></div>
+                        </div>
+                    </div>
 
-        body.innerHTML = "Your verification process is complete!"
+                    <script>
+                        $(".progress-bar")
+                        .animate({
+                            width: "0%"
+                        }, 2000)
+                        .animate({
+                            width: "70%"
+                        }, 5000)
+                        .animate({
+                            width: "100%"
+                        }, 2000);
+                    </script>
+                </div>
+
+                <div>
+                    <div class = "azyo-instr">
+                        Extracting Document Details
+                    </div>
+                    <div class="col-xs-12 col-sm-12 progress-container">
+                        <div class="progress progress-striped active">
+                            <div class="progress-bar progress-bar-success" style="width:0%"></div>
+                        </div>
+                    </div>
+
+                    <script>
+                        $(".progress-bar")
+                        .animate({
+                            width: "70%"
+                        }, 5000)
+                        .animate({
+                            width: "100%"
+                        }, 2000);
+                    </script>
+                </div>
+
+                <div>
+                    <div class = "azyo-instr">
+                        Validating Results
+                    </div>
+                    <div class="col-xs-12 col-sm-12 progress-container">
+                        <div class="progress progress-striped active">
+                            <div class="progress-bar progress-bar-success" style="width:0%"></div>
+                        </div>
+                    </div>
+
+                    <script>
+                        $(".progress-bar")
+                        .animate({
+                            width: "70%"
+                        }, 5000)
+                        .animate({
+                            width: "100%"
+                        }, 2000);
+                    </script>
+                </div>
+        `
         
         var next_btn = document.createElement('button')
         next_btn.type="button"
@@ -682,10 +748,6 @@ class ThankyouView extends AzyoView {
         <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>`
-
- 
-        var model_body = document.createElement('div')
-        model_body.classList.add("modal-body")
 
         body.innerHTML = "Your verification process is complete!"
         

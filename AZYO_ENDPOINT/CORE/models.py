@@ -16,14 +16,36 @@ user_status_choice = (
     ('FINISHED', 'FINISHED')
 )
 
+class DocumentType(Model):
+    name = models.CharField(max_length=155, unique=True, null=False)
+    code = models.CharField(max_length=55, unique=True, null=False)
+
+
+class Country(Model):
+    name = models.CharField(max_length=55, unique=True, null=False)
+    code = models.CharField(max_length=5, unique=True, null=False)
+
+
+class State(Model):
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
+    name = models.CharField(max_length=55, unique=True, null=False)
+    code = models.CharField(max_length=5, unique=True, null=False)
+
+
+class Document(Model):
+    documnet_type = models.ForeignKey(DocumentType, on_delete=models.CASCADE)
+    state = models.ForeignKey(State, on_delete=models.CASCADE)
+
+
 class ClientUser(Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     user_name = CharField(max_length=55, unique=False, null=False)
     user_data = CharField(max_length=155, unique=True, null=False)
     result_status = CharField(max_length=30, choices=user_status_choice, default='INITIALIZED')
-    country_code = CharField(max_length=5)
-    state_code = CharField(max_length=5)
-    document_type = models.CharField(max_length=55)
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, null=True)
+    # country_code = CharField(max_length=5)
+    # state_code = CharField(max_length=5)
+    # document_type = models.CharField(max_length=55)
 
 
 class ClientUserResults(Model):

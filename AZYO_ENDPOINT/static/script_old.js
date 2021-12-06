@@ -98,7 +98,7 @@ AV.register_views([
     [DocTypeView, {}],
     [FrontsideView, {'VideoUtils': VideoUtils}],
     [BacksideView, {'VideoUtils': VideoUtils}],
-    [GenerateResultsView, {}],
+    // [GenerateResultsView, {}],
     [ThankyouView, {}]
 ], true)
 AV.on_finish(() => {AV.init_first_view()})
