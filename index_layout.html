@@ -12,6 +12,7 @@
     src="https://code.jquery.com/jquery-3.6.0.js"
     integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
     crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
     <!-- Button trigger modal -->
@@ -70,38 +71,13 @@
                 </ul>
                 <br>
                 <div style="margin-left: 40px; font-size: large;">
-                    <span>
-                        <h7>
-                            Document:    
-                        </h7>
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="document_type" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Select Document
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="document_type">
-                              <button class="dropdown-item tp" type="button">Aadhaar Card</button>
-                              <button class="dropdown-item tp" type="button">PAN Card</button>
-                              <button class="dropdown-item tp" type="button">Passport</button>
-                              <button class="dropdown-item tp" type="button">Driving License</button>
-                            </div>
-                          </div>
-    
-                        
-                        <script>
-                            let links = document.querySelectorAll('.tp')
-                            links.forEach(element => element.addEventListener("click", function () {
-                                let text = element.innerText
-                                document.getElementById('document_type').innerText = text
-                            }))
-                        </script>
-                    </span>
                     <br>
                     <span>
                         <h7>
                             Country:     
                         </h7>
                         <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="country" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="country" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               Select Country
                             </button>
                             <div class="dropdown-menu" aria-labelledby="country">
@@ -123,10 +99,10 @@
                     <br>
                     <span>
                         <h7>
-                            State:    
+                            State:
                         </h7>
                         <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="state" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="state" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               Select State
                             </button>
                             <div class="dropdown-menu" aria-labelledby="state">
@@ -141,6 +117,32 @@
                             coulinks.forEach(element => element.addEventListener("click", function () {
                                 let text = element.innerText
                                 document.getElementById('state').innerText = text
+                            }))
+                        </script>
+                    </span>
+                    <br>
+                    <span>
+                        <h7>
+                            Document:    
+                        </h7>
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="document_type" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Select Document
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="document_type">
+                              <button class="dropdown-item" type="button">Aadhaar Card</button>
+                              <button class="dropdown-item" type="button">PAN Card</button>
+                              <button class="dropdown-item" type="button">Passport</button>
+                              <button class="dropdown-item" type="button">Driving License</button>
+                            </div>
+                          </div>
+    
+                        
+                        <script>
+                            let links = document.querySelectorAll('.dropdown-item')
+                            links.forEach(element => element.addEventListener("click", function () {
+                                let text = element.innerText
+                                document.getElementById('document_type').innerText = text
                             }))
                         </script>
                     </span>
@@ -247,7 +249,7 @@
     </div>  -->
 
     <!-- Modal 5 -->
-    <div class="modal fade" id="exampleModal5" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="exampleModal5" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg azyo-modal-dialog" role="document">
         <div class="modal-content azyo-modal-content">
             <div class="modal-header azyo-modal-header">
@@ -328,6 +330,67 @@
                 </div>
 
             </div>
+            <div class="modal-footer azyo-moal-footer">
+                <button type="button" class="btn btn-primary">Take Photo</button>
+                <p class = "azyo-cc">Powered by AZYO</p>
+            </div>
+        </div>
+        </div>
+    </div> -->
+    <!-- Modal 5 -->
+    <div class="modal fade" id="exampleModal5" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg azyo-modal-dialog" role="document">
+        <div class="modal-content azyo-modal-content">
+            <div class="modal-header azyo-modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Processing your data</h5>
+                <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6 class="azyo-modal-body-title">
+                    Please wait while we analyse your images
+                </h6>
+                <br>
+                <div style="margin-left: 60px;">
+                    <div>
+                        <div class = "azyo-instr">
+                            <i id = "a" class="fa fa-circle-o-notch fa-spin"></i>
+                            Processing Your Selfie
+                        </div>
+                    </div>
+    
+                    <div>
+                        <div class = "azyo-instr">
+                            <i id = "b" class="fa fa-circle-o-notch fa-spin"></i>
+                            Extracting Document Details
+                        </div>
+                    </div>
+    
+                    <div>
+                        <div class = "azyo-instr">
+                            <i id = "c" class="fa fa-circle-o-notch fa-spin"></i>
+                            Validating Results
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                a = document.getElementById("a")
+                b = document.getElementById("b")
+                c = document.getElementById("c")
+
+                setTimeout(function() {
+		            a.setAttribute("class", "fa fa-check")
+                }, 2000);
+                setTimeout(function() {
+		            b.setAttribute("class", "fa fa-check")
+                }, 2500);
+                setTimeout(function() {
+		            c.setAttribute("class", "fa fa-check")
+                }, 3500);
+
+            </script>
             <div class="modal-footer azyo-moal-footer">
                 <button type="button" class="btn btn-primary">Take Photo</button>
                 <p class = "azyo-cc">Powered by AZYO</p>
