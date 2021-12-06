@@ -33,8 +33,8 @@ class State(Model):
 
 
 class Document(Model):
-    documnet_type = models.ForeignKey(DocumentType, on_delete=models.CASCADE)
-    state = models.ForeignKey(State, on_delete=models.CASCADE)
+    documnet_type = models.ForeignKey(DocumentType, on_delete=models.CASCADE, unique=False)
+    state = models.ForeignKey(State, on_delete=models.CASCADE, unique=False)
 
 
 class ClientUser(Model):

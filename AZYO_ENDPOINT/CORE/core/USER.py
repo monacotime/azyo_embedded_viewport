@@ -309,7 +309,6 @@ class UserDataHandler(UserHandle):
             'match_percentage': confidence
         }
 
-
         # generate and save kyc number
 
         return results
