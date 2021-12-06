@@ -349,7 +349,7 @@ class DocTypeView extends AzyoView {
                             </button>
                             <div class="dropdown-menu" aria-labelledby="state">
                               <button class="dropdown-item sta" type="button">Delhi</button>
-                              <button class="dropdown-item sta" type="button">Maharashtra</button>
+                              <button class="dropdown-item sta" type="button">MH</button>
                               <button class="dropdown-item sta" type="button">Chennai</button>
                             </div>
                         </div>
@@ -371,7 +371,7 @@ class DocTypeView extends AzyoView {
                               <button class="dropdown-item" type="button">Aadhaar Card</button>
                               <button class="dropdown-item" type="button">PAN Card</button>
                               <button class="dropdown-item" type="button">Passport</button>
-                              <button class="dropdown-item" type="button">Driving License</button>
+                              <button class="dropdown-item" type="button">LICENCE</button>
                             </div>
                           </div>
     
@@ -715,6 +715,30 @@ class ResultGenView extends AzyoView {
         var a = document.getElementById("ab")
         var b = document.getElementById("bb")
         var c = document.getElementById("cb")
+        
+        var req_body = this.args['creds']
+        req_body['required'] = {"step": "RESULTGEN"}
+        console.log(req_body)
+        this.send_data("/test_api/", req_body, res => {
+            if (res['status'] !== 'success') {
+                this.detail['success'] = false
+                this.detail['name'] = res['error']
+                this.detail['message'] = res['error_comment']
+                this.next_btn.dispatchEvent(this.get_next_event(this.detail))
+            }
+            else {
+                this.detail['success'] = true
+                c.setAttribute("class", "fa fa-check")
+
+                result = res["step_response"]
+                
+                console.log(result)
+
+                this.next_btn.addEventListener('click', ev => {
+                    this.next_btn.dispatchEvent(this.get_next_event(this.detail))
+                })
+            }
+        })
 
         setTimeout(function() {
             a.setAttribute("class", "fa fa-check")
@@ -722,9 +746,8 @@ class ResultGenView extends AzyoView {
         setTimeout(function() {
             b.setAttribute("class", "fa fa-check")
         }, 2500);
-        setTimeout(function() {
-            c.setAttribute("class", "fa fa-check")
-        }, 3500);
+
+
     }
 }
 
