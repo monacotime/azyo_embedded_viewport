@@ -368,10 +368,10 @@ class DocTypeView extends AzyoView {
                               Select Document
                             </button>
                             <div class="dropdown-menu" aria-labelledby="document_type">
-                              <button class="dropdown-item" type="button">Aadhaar Card</button>
-                              <button class="dropdown-item" type="button">PAN Card</button>
-                              <button class="dropdown-item" type="button">Passport</button>
-                              <button class="dropdown-item" type="button">LICENCE</button>
+                              <button class="dropdown-item tp" type="button">Aadhaar Card</button>
+                              <button class="dropdown-item tp" type="button">PAN Card</button>
+                              <button class="dropdown-item tp" type="button">Passport</button>
+                              <button class="dropdown-item tp" type="button">LICENCE</button>
                             </div>
                           </div>
     
@@ -731,7 +731,7 @@ class ResultGenView extends AzyoView {
                 c.setAttribute("class", "fa fa-check")
 
                 result = res["step_response"]
-                
+
                 console.log(result)
 
                 this.next_btn.addEventListener('click', ev => {
