@@ -303,72 +303,84 @@ class DocTypeView extends AzyoView {
         </button>`
 
         body.innerHTML = `
-        <h6>Prepare a valid government-issued identity document</h6>
-        <br>
-        <div style="margin-left: 40px;">
-            <span>
+        <h6 class="azyo-modal-body-title">
+                    Demo Inc would like to confirm your identity, a process powered by AZYO.
+                </h6>
                 <h7>
-                    Document:    
+                    BEFORE YOU START, PLEASE:
                 </h7>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="document_type" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Select Document
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="document_type">
-                      <button class="dropdown-item tp" type="button">#Aadhaar Card</button>
-                      <button class="dropdown-item tp" type="button">#PAN Card</button>
-                      <button class="dropdown-item tp" type="button">#Passport</button>
-                      <button class="dropdown-item tp" type="button">LICENCE</button>
-                    </div>
-                  </div>
-
-                
-                <script>
-                    
-                </script>
-            </span>
-            <br>
-            <span>
-                <h7>
-                    Country:     
-                </h7>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="country" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Select Country
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="country">
-                      <button class="dropdown-item cou" type="button">IND</button>
-                      <button class="dropdown-item cou" type="button">#USA</button>
-                      <button class="dropdown-item cou" type="button">#CAN</button>
-                    </div>
-                  </div>
-
-                
-                <script>
-                    
-                </script>
-            </span>
-            <br>
-            <span>
-                <h7>
-                    State:    
-                </h7>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="state" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Select State
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="state">
-                      <button class="dropdown-item sta" type="button">#Delhi</button>
-                      <button class="dropdown-item sta" type="button">MH</button>
-                      <button class="dropdown-item sta" type="button">#Chennai</button>
-                    </div>
-                </div>
-                
-                <script>
-                    
-                </script>
-            </span>
-        </div>`
+                <br>
+                <ul>
+                    <li>Prepare a valid government-issued identity document</li>
+                    <li>Check if your device’s camera is uncovered and working</li>
+                    <li>Be prepared to take a selfie and photos of your ID</li>
+                </ul>
+                <br>
+                <div style="margin-left: 40px; font-size: large;">
+                    <br>
+                    <span>
+                        <h7>
+                            Country:     
+                        </h7>
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="country" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Select Country
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="country">
+                              <button class="dropdown-item cou" type="button">IND</button>
+                              <button class="dropdown-item cou" type="button">USA</button>
+                              <button class="dropdown-item cou" type="button">CAN</button>
+                            </div>
+                          </div>
+    
+                        
+                        <script>
+                           
+                        </script>
+                    </span>
+                    <br>
+                    <span>
+                        <h7>
+                            State:
+                        </h7>
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="state" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Select State
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="state">
+                              <button class="dropdown-item sta" type="button">Delhi</button>
+                              <button class="dropdown-item sta" type="button">Maharashtra</button>
+                              <button class="dropdown-item sta" type="button">Chennai</button>
+                            </div>
+                        </div>
+                        
+                        <script>
+                           
+                        </script>
+                    </span>
+                    <br>
+                    <span>
+                        <h7>
+                            Document:    
+                        </h7>
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="document_type" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Select Document
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="document_type">
+                              <button class="dropdown-item" type="button">Aadhaar Card</button>
+                              <button class="dropdown-item" type="button">PAN Card</button>
+                              <button class="dropdown-item" type="button">Passport</button>
+                              <button class="dropdown-item" type="button">Driving License</button>
+                            </div>
+                          </div>
+    
+                        
+                        <script>
+                          
+                        </script>
+                    </span>
+                </div>`
 
         var next_btn = document.createElement('button')
         next_btn.type="button"
@@ -650,6 +662,11 @@ class ResultGenView extends AzyoView {
         var [wrapper, content, header, body, footer, error, cc] = this.AVR.get_azyo_content()
         this.error = error
 
+        var link = document.createElement('link')
+        link.setAttribute('rel', 'stylesheet')
+        link.setAttribute('href', "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+        wrapper.insertBefore(link, content)
+
         header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Processing your data</h5>
         <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -660,70 +677,27 @@ class ResultGenView extends AzyoView {
                     Please wait while we analyse your images
                 </h6>
                 <br>
-                <div>
-                    <div class = "azyo-instr">
-                        Processing Your Selfie
+                <div style="margin-left: 60px;">
+                    <div>
+                        <div class = "azyo-instr">
+                            <i id = "ab" class="fa fa-circle-o-notch fa-spin"></i>
+                            Processing Your Selfie
+                        </div>
                     </div>
-                    <div class="col-xs-12 col-sm-12 progress-container">
-                        <div class="progress progress-striped active">
-                            <div class="progress-bar progress-bar-success" style="width:0%"></div>
+    
+                    <div>
+                        <div class = "azyo-instr">
+                            <i id = "bb" class="fa fa-circle-o-notch fa-spin"></i>
+                            Extracting Document Details
                         </div>
                     </div>
 
-                    <script>
-                        $(".progress-bar")
-                        .animate({
-                            width: "0%"
-                        }, 2000)
-                        .animate({
-                            width: "70%"
-                        }, 5000)
-                        .animate({
-                            width: "100%"
-                        }, 2000);
-                    </script>
-                </div>
-
-                <div>
-                    <div class = "azyo-instr">
-                        Extracting Document Details
-                    </div>
-                    <div class="col-xs-12 col-sm-12 progress-container">
-                        <div class="progress progress-striped active">
-                            <div class="progress-bar progress-bar-success" style="width:0%"></div>
+                    <div>
+                        <div class = "azyo-instr">
+                            <i id = "cb" class="fa fa-circle-o-notch fa-spin"></i>
+                            Validating Results
                         </div>
                     </div>
-
-                    <script>
-                        $(".progress-bar")
-                        .animate({
-                            width: "70%"
-                        }, 5000)
-                        .animate({
-                            width: "100%"
-                        }, 2000);
-                    </script>
-                </div>
-
-                <div>
-                    <div class = "azyo-instr">
-                        Validating Results
-                    </div>
-                    <div class="col-xs-12 col-sm-12 progress-container">
-                        <div class="progress progress-striped active">
-                            <div class="progress-bar progress-bar-success" style="width:0%"></div>
-                        </div>
-                    </div>
-
-                    <script>
-                        $(".progress-bar")
-                        .animate({
-                            width: "70%"
-                        }, 5000)
-                        .animate({
-                            width: "100%"
-                        }, 2000);
-                    </script>
                 </div>
         `
         
@@ -735,6 +709,22 @@ class ResultGenView extends AzyoView {
         footer.insertBefore(next_btn, cc)
 
         root_div.appendChild(wrapper)
+    }
+
+    init_view() {
+        var a = document.getElementById("ab")
+        var b = document.getElementById("bb")
+        var c = document.getElementById("cb")
+
+        setTimeout(function() {
+            a.setAttribute("class", "fa fa-check")
+        }, 2000);
+        setTimeout(function() {
+            b.setAttribute("class", "fa fa-check")
+        }, 2500);
+        setTimeout(function() {
+            c.setAttribute("class", "fa fa-check")
+        }, 3500);
     }
 }
 

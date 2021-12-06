@@ -138,9 +138,9 @@ class UserDataHandler(UserHandle):
     OCR = AzyoOCRService()
     DH = DocumentHandler()
 
-    event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'FINISHED', 'RESULTGEN', 'RESULT']
+    event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'FINISHED', 'RESULTGEN']
     # event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'FINISHED']
-    # event_data_order = ['INITIALIZED', 'DOCTYPE']
+    # event_data_order = ['INITIALIZED', 'DOCTYPE', 'RESULTGEN']
     # event_data_order = ['INITIALIZED', 'SELFIE', 'FRONTSIDE', 'BACKSIDE', 'RESULT', 'FINISHED']
 
     __result_status_next: dict
@@ -164,6 +164,7 @@ class UserDataHandler(UserHandle):
         next_step = self.get_user_next_status(user_data)
         user_root = Path(self.get_user_root(user_data))
 
+
         print('##', next_step, required_data['step'])
         if next_step != required_data['step']:
             raise self.StepAssertionFailed('step meta received in the requirements does not match next steps')
@@ -173,6 +174,7 @@ class UserDataHandler(UserHandle):
 
         next_steps_where_performed = True
 
+        return_data = {'comment': 'everything went well!'}
         if next_step=='SELFIE':
             self.selfie_step(user_root, user_data, required_data)
 
@@ -188,11 +190,7 @@ class UserDataHandler(UserHandle):
             self.save_base64str_to_file(required_data['image'], str(user_backside_path))
 
         elif next_step=='RESULTGEN':
-            # self.ocr_step(user_root, user_data, required_data)
-            pass
-
-        elif next_step=="RESULT": pass
-            # next steps here
+            return_data = self.ocr_step(user_root, user_data, required_data)
 
         else:
             print('# Reached Next ELSE')
@@ -204,7 +202,7 @@ class UserDataHandler(UserHandle):
             print('# updating result status')
             self.update_user_result_status(next_step, user_data)
 
-        return {'comment': 'everything went well!'}
+        return return_data
 
     class UserAlreadyExistsForClient(Exception): 
         def __init__(self, user_name): self.user_name = user_name
@@ -251,6 +249,7 @@ class UserDataHandler(UserHandle):
     ''' -----------------------------------   OCR step ----------------------------------- '''
 
     class AZYOOCRFailed(Exception): pass
+    class AZYOOCRFaceNotFound(Exception): pass
     def ocr_step(self, user_root, user_data, required_data):
         # get ocr files
         frontside = self.OCR.read_image_as_bytes(self.get_user_doc_frontside_image_path(user_data))
@@ -262,9 +261,9 @@ class UserDataHandler(UserHandle):
         client_code = user_data['client_code']
         user_obj = self.get_user(user_data)
         data_config = {
-            "document_type": user_obj.document_type, # LICENCE
-            "country": user_obj.country_code, # IN
-            "state": user_obj.state_code, # Maharashtra
+            "document_type": user_obj.document.documnet_type.code, # LICENCE
+            "country": user_obj.document.state.country.code, # IN
+            "state": user_obj.document.state.code, # Maharashtra
             "user": user_name, # username
             "code": client_code, # client code
         }
@@ -274,6 +273,8 @@ class UserDataHandler(UserHandle):
 
         # save image url provided by azyo service
         face_url = data['face_url']
+        if not face_url:
+            raise self.AZYOOCRFailed('face not recognized')
         status, saved_here = Request.save_requested_image(face_url, user_root, f"{user_data['user_name']}_docprofilepic.png")
 
         # get docprofilepic encoding
@@ -289,7 +290,7 @@ class UserDataHandler(UserHandle):
             confidence = (1 - E_distance) * 100
             ocr_result_status = status[0] # can be True/ False
         else: # does not match
-            raise self.AZYOOCRFailed('OCR result comparsion error')
+            raise self.AZYOOCRFaceNotFound('OCR result comparsion error')
 
         # save docprofilepic encoding, confidance, ocr result status
         try:
@@ -301,7 +302,26 @@ class UserDataHandler(UserHandle):
         except Exception as err:
             raise self.UserResultUpdateError('user ocr result saving failed')
 
+        
+        results = {
+            'selfie_img': self.OCR.read_image_as_bytes(self.get_user_selfie_image_path(user_data)),
+            'ocr_img': self.OCR.read_image_as_bytes(self.get_user_docprofilepic_path(user_data)),
+            'match_percentage': confidence
+        }
+
+
+        # generate and save kyc number
+
+        return results
+
         # update results with match distance from ocr
+
+    def get_user_docprofilepic_path(self, user_data):
+        user_obj = self.get_user(user_data)
+        if not user_obj: return None
+
+        docprofilepic_path = Path(user_obj.user_data) / f"{user_obj.user_name}_docprofilepic.png"
+        return docprofilepic_path
 
     def get_user_doc_frontside_image_path(self, user_data, check_if_exists=False, return_as_str=True):
         user_obj = self.get_user(user_data)
