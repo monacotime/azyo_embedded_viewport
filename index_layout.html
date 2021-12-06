@@ -71,31 +71,6 @@
                 </ul>
                 <br>
                 <div style="margin-left: 40px; font-size: large;">
-                    <span>
-                        <h7>
-                            Document:    
-                        </h7>
-                        <div class="dropdown">
-                            <button class="btn btn-primary dropdown-toggle" type="button" id="document_type" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Select Document
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="document_type">
-                              <button class="dropdown-item" type="button">Aadhaar Card</button>
-                              <button class="dropdown-item" type="button">PAN Card</button>
-                              <button class="dropdown-item" type="button">Passport</button>
-                              <button class="dropdown-item" type="button">Driving License</button>
-                            </div>
-                          </div>
-    
-                        
-                        <script>
-                            let links = document.querySelectorAll('.dropdown-item')
-                            links.forEach(element => element.addEventListener("click", function () {
-                                let text = element.innerText
-                                document.getElementById('document_type').innerText = text
-                            }))
-                        </script>
-                    </span>
                     <br>
                     <span>
                         <h7>
@@ -142,6 +117,32 @@
                             coulinks.forEach(element => element.addEventListener("click", function () {
                                 let text = element.innerText
                                 document.getElementById('state').innerText = text
+                            }))
+                        </script>
+                    </span>
+                    <br>
+                    <span>
+                        <h7>
+                            Document:    
+                        </h7>
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="document_type" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Select Document
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="document_type">
+                              <button class="dropdown-item" type="button">Aadhaar Card</button>
+                              <button class="dropdown-item" type="button">PAN Card</button>
+                              <button class="dropdown-item" type="button">Passport</button>
+                              <button class="dropdown-item" type="button">Driving License</button>
+                            </div>
+                          </div>
+    
+                        
+                        <script>
+                            let links = document.querySelectorAll('.dropdown-item')
+                            links.forEach(element => element.addEventListener("click", function () {
+                                let text = element.innerText
+                                document.getElementById('document_type').innerText = text
                             }))
                         </script>
                     </span>
