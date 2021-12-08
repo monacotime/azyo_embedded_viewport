@@ -304,81 +304,83 @@ class DocTypeView extends AzyoView {
 
         body.innerHTML = `
         <h6 class="azyo-modal-body-title">
-                    Demo Inc would like to confirm your identity, a process powered by AZYO.
+                    Demo Inc would like to confirm your identity
                 </h6>
-                <h7>
-                    BEFORE YOU START, PLEASE:
-                </h7>
                 <br>
-                <ul>
-                    <li>Prepare a valid government-issued identity document</li>
-                    <li>Check if your device’s camera is uncovered and working</li>
-                    <li>Be prepared to take a selfie and photos of your ID</li>
-                </ul>
-                <div style="margin-left: 40px; font-size: large;">
-                    <span>
-                        <h7>
-                            Country:     
-                        </h7>
-                        <div class="dropdown">
-                            <button class="btn btn-primary dropdown-toggle" type="button" id="country" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Select Country
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="country">
-                              <button class="dropdown-item cou" type="button">IND</button>
-                              <button class="dropdown-item cou" type="button">USA</button>
-                              <button class="dropdown-item cou" type="button">CAN</button>
+                <div>
+                    <div>
+                        <ul>
+                            <li>Prepare a valid government-issued identity document</li>
+                            <li>Check if your device’s camera is uncovered and working</li>
+                            <li>Be prepared to take a selfie and photos of your ID</li>
+                        </ul>
+                    </div>
+                    <div style="margin-left: 40px; font-size: large;">
+                        <span>
+                            <h7>
+                                Country:     
+                            </h7>
+                            <div class="dropdown">
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="country" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Select Country
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="country">
+                                <button class="dropdown-item cou" type="button">IND</button>
+                                <button class="dropdown-item cou" type="button">USA</button>
+                                <button class="dropdown-item cou" type="button">CAN</button>
+                                </div>
                             </div>
-                          </div>
-    
-                        
-                        <script>
-                           
-                        </script>
-                    </span>
-                    <br>
-                    <span>
-                        <h7>
-                            State:
-                        </h7>
-                        <div class="dropdown">
-                            <button class="btn btn-primary dropdown-toggle" type="button" id="state" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Select State
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="state">
-                              <button class="dropdown-item sta" type="button">Delhi</button>
-                              <button class="dropdown-item sta" type="button">MH</button>
-                              <button class="dropdown-item sta" type="button">Chennai</button>
+        
+                            
+                            <script>
+                            
+                            </script>
+                        </span>
+                        <br>
+                        <span>
+                            <h7>
+                                State:
+                            </h7>
+                            <div class="dropdown">
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="state" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Select State
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="state">
+                                <button class="dropdown-item sta" type="button">Delhi</button>
+                                <button class="dropdown-item sta" type="button">MH</button>
+                                <button class="dropdown-item sta" type="button">Chennai</button>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <script>
-                           
-                        </script>
-                    </span>
-                    <br>
-                    <span>
-                        <h7>
-                            Document:    
-                        </h7>
-                        <div class="dropdown">
-                            <button class="btn btn-primary dropdown-toggle" type="button" id="document_type" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Select Document
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="document_type">
-                              <button class="dropdown-item tp" type="button">Aadhaar Card</button>
-                              <button class="dropdown-item tp" type="button">PAN Card</button>
-                              <button class="dropdown-item tp" type="button">Passport</button>
-                              <button class="dropdown-item tp" type="button">LICENCE</button>
+                            
+                            <script>
+                            
+                            </script>
+                        </span>
+                        <br>
+                        <span>
+                            <h7>
+                                Document:    
+                            </h7>
+                            <div class="dropdown">
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="document_type" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Select Document
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="document_type">
+                                <button class="dropdown-item tp" type="button">Aadhaar Card</button>
+                                <button class="dropdown-item tp" type="button">PAN Card</button>
+                                <button class="dropdown-item tp" type="button">Passport</button>
+                                <button class="dropdown-item tp" type="button">LICENCE</button>
+                                </div>
                             </div>
-                          </div>
-    
-                        
-                        <script>
-                          
-                        </script>
-                    </span>
-                </div>`
+        
+                            
+                            <script>
+                            
+                            </script>
+                        </span>
+                    </div>
+                </div>
+                `
 
         var next_btn = document.createElement('button')
         next_btn.type="button"
