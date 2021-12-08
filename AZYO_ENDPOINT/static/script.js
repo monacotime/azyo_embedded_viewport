@@ -43,6 +43,15 @@ class AzyoViewPort {
                 ev.detail['view'].error_occured(ev.detail['name'], ev.detail['message'])
             }
         })
+        this.root.addEventListener('backto', ev => {
+            if (ev.detail['success']) {
+                init_view(detail['to'])
+            }
+            else {
+                console.log('Failed', ev.detail)
+                ev.detail['view'].error_occured(ev.detail['name'], ev.detail['message'])
+            }
+        })
     }
 
     register_views(views, init_first=false) {
@@ -65,11 +74,20 @@ class AzyoViewPort {
     }
 
     init_first_view() {
-        if(this.finished_()) this.#unset_view(this.#views[this.#current])
-        this.#current = 0
+        this.init_view(0)
+        // if(this.finished_()) this.#unset_view(this.#views[this.#current])
+        // this.#current = 0
 
-        var first_view = this.#views[0]
-        this.#set_view(first_view)
+        // var first_view = this.#views[0]
+        // this.#set_view(first_view)
+    }
+
+    init_view(index) {
+        if(this.finished_()) this.#unset_view(this.#views[this.#current])
+        this.#current = index
+
+        var initialized_view = this.#views[index]
+        this.#set_view(initialized_view)
     }
     
     finished_() { return (this.#ends === this.#current)? true: false}
@@ -103,16 +121,6 @@ class AzyoViewPort {
     #unset_view(view) {
         this.root.innerHTML = ""
         view.distroy_view()
-    }
-
-
-    get_next_event() {
-        return new CustomEvent("next", {
-            detail: {'success': true},
-            bubbles: true,
-            cancelable: true,
-            composed: false,
-        });
     }
 
 }
