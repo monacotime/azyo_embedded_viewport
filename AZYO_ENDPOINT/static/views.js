@@ -92,6 +92,15 @@ class AzyoView {
         });
     }
 
+    get_back_to_event(detail) {
+        return new CustomEvent("backto", {
+            detail: detail,
+            bubbles: true,
+            cancelable: true,
+            composed: false,
+        });
+    }
+
     init_args(args) {this.args = args}
 
     init_view() {

@@ -54,6 +54,7 @@ class UserHandle:
             raise self.UserAlreadyExists(f"user was created")
 
     class UserCreationError(Exception): pass
+    class UserUpdateError(Exception): pass
     def __init_user(self, user, client):
         # make sure client exists first while editing code here
         client_obj = self.get_client_object(client)
@@ -139,9 +140,6 @@ class UserDataHandler(UserHandle):
     DH = DocumentHandler()
 
     event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'RESULTGEN', 'FINISHED']
-    # event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'FINISHED']
-    # event_data_order = ['INITIALIZED', 'DOCTYPE', 'RESULTGEN']
-    # event_data_order = ['INITIALIZED', 'SELFIE', 'FRONTSIDE', 'BACKSIDE', 'RESULT', 'FINISHED']
 
     __result_status_next: dict
 
@@ -241,7 +239,7 @@ class UserDataHandler(UserHandle):
             user_obj = self.get_user(user_data)
             user_obj.document = doc_obj
             user_obj.save()
-        except Exception as err: raise self.UserCreationError('user update error actualy!!')
+        except Exception as err: raise self.UserUpdateError('user update error actualy!!')
 
     ''' -----------------------------------  DOCTYPE step ----------------------------------- '''
 
