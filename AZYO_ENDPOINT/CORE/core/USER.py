@@ -304,8 +304,8 @@ class UserDataHandler(UserHandle):
 
         
         results = {
-            'selfie_img': self.OCR.read_image_as_bytes(self.get_user_selfie_image_path(user_data)),
-            'ocr_img': self.OCR.read_image_as_bytes(self.get_user_docprofilepic_path(user_data)),
+            'selfie_img': b"data:image/png;base64," +self.OCR.read_image_as_bytes(self.get_user_selfie_image_path(user_data)),
+            'ocr_img': b"data:image/png;base64," + self.OCR.read_image_as_bytes(self.get_user_docprofilepic_path(user_data)),
             'match_percentage': status
         }
 

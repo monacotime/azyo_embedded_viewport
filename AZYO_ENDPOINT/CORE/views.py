@@ -131,7 +131,13 @@ class TestAPI(View):
                 default_payload['error'] = 'UserCreationError'
                 default_payload['error_type'] = '500'
                 default_payload['error_comment'] = 'this is from our side, please try after sometimes'
-      
+            
+            except Exception as err:
+                default_payload['status'] = 'failed'
+                default_payload['error'] = 'Server500'
+                default_payload['error_type'] = '500'
+                default_payload['error_comment'] = 'sorry for the inconvinience!'
+
         except UH.ClientDoesNotExist as err:
             default_payload['status'] = 'failed'
             default_payload['error'] = 'ClientDoesNotExist'
@@ -161,7 +167,6 @@ class TestAPI(View):
             default_payload['error'] = 'Server500'
             default_payload['error_type'] = '500'
             default_payload['error_comment'] = 'sorry for the inconvinience!'
-            raise err
 
         return JsonResponse(default_payload)
 

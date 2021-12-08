@@ -36,9 +36,11 @@
     </div>
 
 </body>
-    <script>
-        
-    </script>
     <script src="{% static 'views.js' %}"></script>
     <script src="{% static 'script.js' %}"></script>
+    <script>
+        const root = document.getElementById('exampleModal')
+        AV = new AzyoViewPort(root, client_code="0000111100001111", user_name="test user 2")
+        AV.on_finish(() => {AV.init_first_view()})
+    </script>
 </html>
