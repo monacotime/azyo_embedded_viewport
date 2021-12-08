@@ -20,9 +20,18 @@ class AzyoViewPort {
 
     constructor(root_div, client_code, user_name, views=null) {
         this.#init_root(root_div)
-        if (views) {register_views(views)}
+        // if (views) {register_views(views)}
         this.client_code = client_code
         this.user_name = user_name
+        this.register_views([
+            [GreetingsView, {}],
+            [SelfieView, {'VideoUtils': VideoUtils}],
+            [DocTypeView, {}],
+            [FrontsideView, {'VideoUtils': VideoUtils}],
+            [BacksideView, {'VideoUtils': VideoUtils}],
+            [ResultGenView, {}],
+            [ThankyouView, {}],
+        ], true)
     }
 
     #init_root(root_div) {
@@ -37,7 +46,7 @@ class AzyoViewPort {
         
         this.root.addEventListener('backto', ev => {
             if (ev.detail['success']) {
-                this.root.innerHTML = ''
+                this.root.innerHTML = ""
                 init_view(detail['to'])
             }
             else {
@@ -117,18 +126,3 @@ class AzyoViewPort {
     }
 
 }
-
-
-const root = document.getElementById('exampleModal')
-
-AV = new AzyoViewPort(root, client_code="0000111100001111", user_name="test user 2")
-AV.register_views([
-    [GreetingsView, {}],
-    [SelfieView, {'VideoUtils': VideoUtils}],
-    [DocTypeView, {}],
-    [FrontsideView, {'VideoUtils': VideoUtils}],
-    [BacksideView, {'VideoUtils': VideoUtils}],
-    [ResultGenView, {}],
-    [ThankyouView, {}],
-], true)
-AV.on_finish(() => {AV.init_first_view()})

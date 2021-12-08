@@ -376,7 +376,7 @@ class DocTypeView extends AzyoView {
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="document_type">
                                 <button class="dropdown-item tp" type="button">Aadhaar Card</button>
-                                <button class="dropdown-item tp" type="button">PAN Card</button>
+                                <button class="dropdown-item tp" type="button">PANCARD</button>
                                 <button class="dropdown-item tp" type="button">Passport</button>
                                 <button class="dropdown-item tp" type="button">LICENCE</button>
                                 </div>
@@ -670,6 +670,8 @@ class ResultGenView extends AzyoView {
     render_view(root_div) {
         var [wrapper, content, header, body, footer, error, cc] = this.AVR.get_azyo_content()
         this.error = error
+        this.footer = footer
+        this.cc = cc
 
         var link = document.createElement('link')
         link.setAttribute('rel', 'stylesheet')
@@ -708,15 +710,22 @@ class ResultGenView extends AzyoView {
                         </div>
                     </div>
                 </div>
-        `
-        
+                <div class= "res_holder">
+                    <div class = "res_img_holder">
+                    <img id = "img1" class = "azyo_res_img" src="" alt="" />
+
+                    </div>
+                    <img id = "img2" class = "azyo_res_img" src="" alt="" />
+
+                    </div>
+                    <span id = "azyo_res">here is result</span>
+                </div>
+        `                
         var next_btn = document.createElement('button')
         this.next_btn = next_btn
         next_btn.type="button"
         next_btn.classList.add('btn', 'btn-primary')
         next_btn.innerHTML = "Thank You"
-
-        footer.insertBefore(next_btn, cc)
 
         root_div.appendChild(wrapper)
     }
@@ -734,7 +743,14 @@ class ResultGenView extends AzyoView {
                 this.detail['success'] = false
                 this.detail['name'] = res['error']
                 this.detail['message'] = res['error_comment']
-                this.next_btn.dispatchEvent(this.get_next_event(this.detail))
+                this.detail['to'] = 1
+
+                this.next_btn.innerHTML = "Retry"
+                this.footer.insertBefore(this.next_btn, this.cc)
+
+                this.next_btn.addEventListener('click', ev => {
+                    this.next_btn.dispatchEvent(this.get_back_to_event(this.detail))
+                })
             }
             else {
                 this.detail['success'] = true
@@ -743,6 +759,13 @@ class ResultGenView extends AzyoView {
                 result = res["step_response"]
 
                 console.log(result)
+
+                document.getElementById("img1").setAttribute("src", result["selfie_img"])
+                document.getElementById("img2").setAttribute("src", result["ocr_img"])
+                document.getElementById("img2").innerHTML = result["match_percentage"]
+
+                this.next_btn.innerHTML = "Thank You"
+                this.footer.insertBefore(this.next_btn, this.cc)
 
                 this.next_btn.addEventListener('click', ev => {
                     this.next_btn.dispatchEvent(this.get_next_event(this.detail))
