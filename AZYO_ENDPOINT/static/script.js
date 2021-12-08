@@ -45,6 +45,7 @@ class AzyoViewPort {
         })
         this.root.addEventListener('backto', ev => {
             if (ev.detail['success']) {
+                this.root.innerHTML = ""
                 init_view(detail['to'])
             }
             else {

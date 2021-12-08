@@ -670,6 +670,8 @@ class ResultGenView extends AzyoView {
     render_view(root_div) {
         var [wrapper, content, header, body, footer, error, cc] = this.AVR.get_azyo_content()
         this.error = error
+        this.footer = footer
+        this.cc = cc
 
         var link = document.createElement('link')
         link.setAttribute('rel', 'stylesheet')
@@ -741,11 +743,14 @@ class ResultGenView extends AzyoView {
                 this.detail['success'] = false
                 this.detail['name'] = res['error']
                 this.detail['message'] = res['error_comment']
+                this.detail['to'] = 1
 
-                next_btn.innerHTML = "Retry"
-                footer.insertBefore(next_btn, cc)
+                this.next_btn.innerHTML = "Retry"
+                this.footer.insertBefore(this.next_btn, this.cc)
 
-                this.next_btn.dispatchEvent(this.get_next_event(this.detail))
+                this.next_btn.addEventListener('click', ev => {
+                    this.next_btn.dispatchEvent(this.get_back_to_event(this.detail))
+                })
             }
             else {
                 this.detail['success'] = true
@@ -759,8 +764,8 @@ class ResultGenView extends AzyoView {
                 document.getElementById("img2").setAttribute("src", result["ocr_img"])
                 document.getElementById("img2").innerHTML = result["match_percentage"]
 
-                next_btn.innerHTML = "Thank You"
-                footer.insertBefore(next_btn, cc)
+                this.next_btn.innerHTML = "Thank You"
+                this.footer.insertBefore(this.next_btn, this.cc)
 
                 this.next_btn.addEventListener('click', ev => {
                     this.next_btn.dispatchEvent(this.get_next_event(this.detail))

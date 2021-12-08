@@ -119,10 +119,12 @@ class AzyoOCRService:
         
 
         resp = requests.post(AzyoOCRService.domain_name,files=files,data=data)
+        print(resp.status_code)
         if resp.status_code != 200:
             AzyoOCRService.OCRFAILED(f'Failed with status code: {resp.status_code}')
         else: 
             data = resp.json()
+            print(data)
             formated = {}
             for fields, values in zip(data['fields_detected'], data['field_values']):
                 formated[fields['value']] = values['value']
