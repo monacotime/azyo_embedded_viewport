@@ -138,7 +138,7 @@ class UserDataHandler(UserHandle):
     OCR = AzyoOCRService()
     DH = DocumentHandler()
 
-    event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'FINISHED', 'RESULTGEN']
+    event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'RESULTGEN', 'FINISHED']
     # event_data_order = ['INITIALIZED', 'SELFIE', 'DOCTYPE', 'FRONTSIDE', 'BACKSIDE', 'FINISHED']
     # event_data_order = ['INITIALIZED', 'DOCTYPE', 'RESULTGEN']
     # event_data_order = ['INITIALIZED', 'SELFIE', 'FRONTSIDE', 'BACKSIDE', 'RESULT', 'FINISHED']
@@ -272,9 +272,9 @@ class UserDataHandler(UserHandle):
         data = self.OCR.get_ocr_data(files, data_config)
 
         # save image url provided by azyo service
-        face_url = data['face_url']
-        if not face_url:
+        if not data:
             raise self.AZYOOCRFailed('face not recognized')
+        face_url = data['face_url']
         status, saved_here = Request.save_requested_image(face_url, user_root, f"{user_data['user_name']}_docprofilepic.png")
 
         # get docprofilepic encoding
@@ -306,9 +306,8 @@ class UserDataHandler(UserHandle):
         results = {
             'selfie_img': self.OCR.read_image_as_bytes(self.get_user_selfie_image_path(user_data)),
             'ocr_img': self.OCR.read_image_as_bytes(self.get_user_docprofilepic_path(user_data)),
-            'match_percentage': confidence
+            'match_percentage': status
         }
-
 
         # generate and save kyc number
 

@@ -80,6 +80,12 @@ class TestAPI(View):
                 default_payload['error'] = 'UserAlreadyExistsForClient'
                 default_payload['error_type'] = 'serious'
                 default_payload['error_comment'] = f'client matches with user {err.user_name}'
+            
+            except UDH.AZYOOCRFaceNotFound as err:
+                default_payload['status'] = 'failed'
+                default_payload['error'] = 'UserAlreadyExistsForClient'
+                default_payload['error_type'] = 'serious'
+                default_payload['error_comment'] = f'client matches with user {err.user_name}'
 
             except UDH.FR.NoFaceDetected as err:
                 default_payload['status'] = 'failed'
