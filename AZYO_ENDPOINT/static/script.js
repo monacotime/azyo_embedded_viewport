@@ -34,8 +34,10 @@ class AzyoViewPort {
                 ev.detail['view'].error_occured(ev.detail['name'], ev.detail['message'])
             }
         })
+        
         this.root.addEventListener('backto', ev => {
             if (ev.detail['success']) {
+                this.root.innerHTML = ''
                 init_view(detail['to'])
             }
             else {

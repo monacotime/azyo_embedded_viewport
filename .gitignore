@@ -1,2 +1,3 @@
 env
 AZYO_ENDPOINT\__pycache__*
+**.pyc
