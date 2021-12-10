@@ -6,6 +6,7 @@ from .UTILS import AzyoOCRService, Request, FaceRecognition
 from pathlib import Path
 import base64
 from numpy import array
+import requests
 
 
 class UserHandle:
@@ -126,12 +127,15 @@ class DocumentHandler():
         return doctype_obj
 
     class DocumnetCreationError(Exception): pass
+    class DocumnetUpdateError(Exception): pass
     def create_document(self, state_obj, doctype_obj):
         doc_obj = Document()
         doc_obj.state = state_obj
         doc_obj.documnet_type = doctype_obj
         Document.save(doc_obj)
         return doc_obj
+
+    def document_exists(): pass
 
 
 class UserDataHandler(UserHandle):
@@ -230,16 +234,32 @@ class UserDataHandler(UserHandle):
                 raise self.DocumentManagementError('state and country do not match')
         else: raise self.DocumentManagementError('country or state does not exist')
         
-        try:
-            doc_obj = self.DH.create_document(state_obj, document_obj)
-        except:
-            raise self.DH.DocumnetCreationError('document creation error')
+        doc_obj = self.if_document_exists_for_user(user_data)
+        if not doc_obj:
+            try:
+                doc_obj = self.DH.create_document(state_obj, document_obj)
+            except Exception as err:
+                raise self.DH.DocumnetCreationError('document creation error')
+        else:
+            try:
+                doc_obj.state = state_obj
+                doc_obj.documnet_type = document_obj
+                doc_obj.save()
+            except Exception as err:
+                raise self.DH.DocumnetUpdateError('document update error')
+
 
         try:
             user_obj = self.get_user(user_data)
             user_obj.document = doc_obj
             user_obj.save()
         except Exception as err: raise self.UserUpdateError('user update error actualy!!')
+
+    def if_document_exists_for_user(self, user_data) -> Document:
+        user_obj = self.get_user(user_data)
+        if not user_obj: return None
+
+        return user_obj.document if user_obj.document else None
 
     ''' -----------------------------------  DOCTYPE step ----------------------------------- '''
 
@@ -249,42 +269,89 @@ class UserDataHandler(UserHandle):
     class AZYOOCRFailed(Exception): pass
     class AZYOOCRFaceNotFound(Exception): pass
     def ocr_step(self, user_root, user_data, required_data):
-        # get ocr files
-        frontside = self.OCR.read_image_as_bytes(self.get_user_doc_frontside_image_path(user_data))
-        backside = self.OCR.read_image_as_bytes(self.get_user_doc_backside_image_path(user_data))
-        files = {'file1': frontside, 'file2': backside}
+        # # get ocr files
+        # a = self.get_user_doc_frontside_image_path(user_data)
+        # b = self.get_user_doc_backside_image_path(user_data)
+        # print(Path(a).exists(), Path(b).exists())
+        # frontside = self.OCR.read_image_as_bytes(self.get_user_doc_frontside_image_path(user_data))
+        # backside = self.OCR.read_image_as_bytes(self.get_user_doc_backside_image_path(user_data))
+        # files = {'file1': frontside, 'file2': backside}
+        # print(type(files['file1']), len(files['file1']), type(files['file2']), len(files['file2']))
 
-        # get ocr data
-        user_name = user_data['user_name']
-        client_code = user_data['client_code']
-        user_obj = self.get_user(user_data)
-        data_config = {
-            "document_type": user_obj.document.documnet_type.code, # LICENCE
-            "country": user_obj.document.state.country.code, # IN
-            "state": user_obj.document.state.code, # Maharashtra
-            "user": user_name, # username
-            "code": client_code, # client code
-        }
+        # # get ocr data
+        # user_name = user_data['user_name']
+        # client_code = user_data['client_code']
+        # user_obj = self.get_user(user_data)
+        # data_config = {
+        #     "document_type": user_obj.document.documnet_type.code, # LICENCE
+        #     "country": user_obj.document.state.country.code, # IND
+        #     "state": user_obj.document.state.code, # MH
+        #     "user": user_name, # username
+        #     "code": client_code, # client code
+        # }
+        # print(data_config)
 
-        # do ocr
-        data = self.OCR.get_ocr_data(files, data_config)
+        # # do ocr
+        # # data = self.OCR.get_ocr_data(files, data_config)
+        # resp = requests.post("http://103.93.17.125:5001/api/v2/docs",files=files,data=data_config)
+        # print(resp.status_code)
+        # if resp.status_code != 200:
+        #     raise AzyoOCRService.OCRFAILED(f'Failed with status code: {resp.status_code}')
+        # else: 
+        #     data = resp.json()
+        #     print(data)
+        #     formated = {}
+        #     for fields, values in zip(data['fields_detected'], data['field_values']):
+        #         formated[fields['value']] = values['value']
+        #     formated['face_url'] = data['face_url']
 
+        # user_data = {'client_code': '0000111100001111', 'user_name': 'test user 2'}
+        '''This was not meant to be like this'''
+        front_path = self.get_user_doc_frontside_image_path(user_data)
+        print(front_path, type(front_path), Path(front_path).exists())
+        back_path = self.get_user_doc_backside_image_path(user_data)
+        print(back_path, type(back_path), Path(back_path).exists())
+        fv = self.OCR.read_image_as_bytes(front_path)
+        bv = self.OCR.read_image_as_bytes(back_path)
+        print(len(fv), type(fv))
+        print(len(bv), type(bv))
+        doc_obj = self.if_document_exists_for_user(user_data)
+        print(f'''
+        {doc_obj.documnet_type.code}, {type(doc_obj.documnet_type.code)}
+        {doc_obj.state.country.code}, {type(doc_obj.state.country.code)}
+        {doc_obj.state.code}, {type(doc_obj.state.code)}
+        ''')
+        resp = requests.post("http://103.93.17.125:5001/api/v2/docs",
+            files={"file": fv, "file1": bv},
+            data={'document_type': doc_obj.documnet_type.code, 'country': doc_obj.state.country.code, 'state': doc_obj.state.code,
+            'user': 'test user 2', 'code': '0000111100001111'})
+
+        print(resp.content)
+        if resp.status_code != 200:
+            raise Exception('not again')
+        else:
+            data = resp.json()
+            print(data)
+
+        # data = formated
+        if not 'face_url' in data:
+            raise Exception('where is face?')
         # save image url provided by azyo service
-        if not data:
-            raise self.AZYOOCRFailed('face not recognized')
         face_url = data['face_url']
         status, saved_here = Request.save_requested_image(face_url, user_root, f"{user_data['user_name']}_docprofilepic.png")
 
         # get docprofilepic encoding
         docprofilepic_encodings =  self.FR.get_face_encodings(saved_here)
+        docprofilepic_encodings = self.FR.get_encodings_from_str(docprofilepic_encodings)
 
         user_results = self.get_user_results(user_data)
+        user_encodings = self.FR.get_encodings_from_str(user_results.selfie_encodings)
 
         # compare and get Eucledian distance and status of face comparing
-        status = self.FR.compare_encodings(user_results.selfie_encodings, docprofilepic_encodings)
+        status = self.FR.compare_encodings(user_encodings, docprofilepic_encodings)
 
         if status: # match
-            E_distance = self.FR.compare_distance(user_results.selfie_encodings, docprofilepic_encodings)[0]
+            E_distance = self.FR.compare_distance(user_encodings, docprofilepic_encodings)[0]
             confidence = (1 - E_distance) * 100
             ocr_result_status = status[0] # can be True/ False
         else: # does not match
@@ -300,12 +367,12 @@ class UserDataHandler(UserHandle):
         except Exception as err:
             raise self.UserResultUpdateError('user ocr result saving failed')
 
-        
         results = {
-            'selfie_img': b"data:image/png;base64," +self.OCR.read_image_as_bytes(self.get_user_selfie_image_path(user_data)),
-            'ocr_img': b"data:image/png;base64," + self.OCR.read_image_as_bytes(self.get_user_docprofilepic_path(user_data)),
-            'match_percentage': status
+            'selfie_img': self.get_base64imgstr_from_file(self.get_user_selfie_image_path(user_data)),
+            'ocr_img': self.get_base64imgstr_from_file(self.get_user_docprofilepic_path(user_data)),
+            'match_percentage': 'true' if status else 'false'
         }
+        print(results)
 
         # generate and save kyc number
 
@@ -442,6 +509,16 @@ class UserDataHandler(UserHandle):
         base64imagestr_encoded = str.encode(base64imagestr)
         with open(file_name, "wb") as fh:
             fh.write(base64.decodebytes(base64imagestr_encoded))
+
+    # move this to UTILS next
+    def get_base64imgstr_from_file(path):
+        with open(path, 'rb') as f:
+            image_read = base64.b64encode(f.read()).decode('utf-8')
+
+        return "data:image/png;base64," + image_read
+
+    def from_file_get_base64str(self, path):
+        attach_meta="data:image/png;base64,"
 
     def __init_result_status_next(self):
         result_status_next = {}

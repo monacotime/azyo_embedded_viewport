@@ -118,7 +118,7 @@ class AzyoView {
     error_occured(name, message) {
         console.log(this.error)
         if (this.error) {
-            this.error.innerHTML = ` ERROR: ` + name + ' || ' + message
+            this.error.innerHTML = `<div style="color:red; text-align:center;">` + message + `</div>`
         }
     }
 
@@ -727,58 +727,83 @@ class ResultGenView extends AzyoView {
         next_btn.classList.add('btn', 'btn-primary')
         next_btn.innerHTML = "Thank You"
 
+        footer.insertBefore(next_btn, cc)
+
         root_div.appendChild(wrapper)
     }
 
     init_view() {
-        var a = document.getElementById("ab")
-        var b = document.getElementById("bb")
-        var c = document.getElementById("cb")
-        
-        var req_body = this.args['creds']
-        req_body['required'] = {"step": "RESULTGEN"}
-        console.log(req_body)
-        this.send_data("/test_api/", req_body, res => {
-            if (res['status'] !== 'success') {
-                this.detail['success'] = false
-                this.detail['name'] = res['error']
-                this.detail['message'] = res['error_comment']
-                this.detail['to'] = 1
 
-                this.next_btn.innerHTML = "Retry"
-                this.footer.insertBefore(this.next_btn, this.cc)
 
-                this.next_btn.addEventListener('click', ev => {
-                    this.next_btn.dispatchEvent(this.get_back_to_event(this.detail))
-                })
-            }
-            else {
-                this.detail['success'] = true
-                c.setAttribute("class", "fa fa-check")
+        this.next_btn.addEventListener('click', ev => {
 
-                result = res["step_response"]
-
-                console.log(result)
-
-                document.getElementById("img1").setAttribute("src", result["selfie_img"])
-                document.getElementById("img2").setAttribute("src", result["ocr_img"])
-                document.getElementById("img2").innerHTML = result["match_percentage"]
-
-                this.next_btn.innerHTML = "Thank You"
-                this.footer.insertBefore(this.next_btn, this.cc)
-
-                this.next_btn.addEventListener('click', ev => {
+            var req_body = this.args['creds']
+            req_body['required'] = {"step": "RESULTGEN"}
+            console.log(req_body)
+            this.send_data("/test_api/", req_body, res => {
+                console.log(res)
+                if (res['status'] !== 'success') {
+                    this.detail['success'] = false
+                    this.detail['name'] = res['error']
+                    this.detail['message'] = res['error_comment']
                     this.next_btn.dispatchEvent(this.get_next_event(this.detail))
-                })
-            }
+                }
+                else {
+                    this.detail['success'] = false
+                    this.detail['message'] = 'I want to see response'
+                    console.log(res)
+                    this.next_btn.dispatchEvent(this.get_next_event(this.detail))
+                }
+            })
         })
+        // var a = document.getElementById("ab")
+        // var b = document.getElementById("bb")
+        // var c = document.getElementById("cb")
+        
+        // var req_body = this.args['creds']
+        // req_body['required'] = {"step": "RESULTGEN"}
+        // console.log(req_body)
+        // this.send_data("/test_api/", req_body, res => {
+        //     if (res['status'] !== 'success') {
+        //         this.detail['success'] = true
+        //         this.detail['name'] = res['error']
+        //         this.detail['message'] = res['error_comment']
+        //         this.detail['to'] = 1
 
-        setTimeout(function() {
-            a.setAttribute("class", "fa fa-check")
-        }, 2000);
-        setTimeout(function() {
-            b.setAttribute("class", "fa fa-check")
-        }, 2500);
+        //         this.next_btn.innerHTML = "Retry"
+        //         this.footer.insertBefore(this.next_btn, this.cc)
+
+        //         // this.next_btn.addEventListener('click', ev => {
+        //         //     this.next_btn.dispatchEvent(this.get_back_to_event(this.detail))
+        //         // })
+        //     }
+        //     else {
+        //         this.detail['success'] = true
+        //         c.setAttribute("class", "fa fa-check")
+
+        //         result = res["step_response"]
+
+        //         console.log(result)
+
+        //         document.getElementById("img1").setAttribute("src", result["selfie_img"])
+        //         document.getElementById("img2").setAttribute("src", result["ocr_img"])
+        //         document.getElementById("img2").innerHTML = result["match_percentage"]
+
+        //         this.next_btn.innerHTML = "Thank You"
+        //         this.footer.insertBefore(this.next_btn, this.cc)
+
+        //         // this.next_btn.addEventListener('click', ev => {
+        //         //     this.next_btn.dispatchEvent(this.get_next_event(this.detail))
+        //         // })
+        //     }
+        // })
+
+        // setTimeout(function() {
+        //     a.setAttribute("class", "fa fa-check")
+        // }, 2000);
+        // setTimeout(function() {
+        //     b.setAttribute("class", "fa fa-check")
+        // }, 2500);
 
 
     }

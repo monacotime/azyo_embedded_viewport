@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 from django.http import HttpRequest
 from django.http.response import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -12,17 +13,38 @@ from .core.UTILS import Request, FaceRecognition
 from .core.USER import UserDataHandler, UserHandle
 
 from numpy import array
+import requests
+
+
 
 
 def test(request):
-    try:
-        user_data = {'client_code': '0000111100001111', 'user_name': 'test user 2'}
-        UH = UserHandle()
-        UDH = UserDataHandler()
-        
-    except Exception as err:
-        raise err
-
+    UDH = UserDataHandler()
+    user_data = {'client_code': '0000111100001111', 'user_name': 'test user 2'}
+    front_path = UDH.get_user_doc_frontside_image_path(user_data)
+    print(front_path, type(front_path), Path(front_path).exists())
+    back_path = UDH.get_user_doc_backside_image_path(user_data)
+    print(back_path, type(back_path), Path(back_path).exists())
+    fv = UDH.OCR.read_image_as_bytes(front_path)
+    bv = UDH.OCR.read_image_as_bytes(back_path)
+    print(len(fv), type(fv))
+    print(len(bv), type(bv))
+    doc_obj = UDH.if_document_exists_for_user(user_data)
+    print(f'''
+    {doc_obj.documnet_type.code}, {type(doc_obj.documnet_type.code)}
+    {doc_obj.state.country.code}, {type(doc_obj.state.country.code)}
+    {doc_obj.state.code}, {type(doc_obj.state.code)}
+    ''')
+    
+    resp = requests.post("http://103.93.17.125:5001/api/v2/docs",
+    files={"file": fv, "file1": bv},
+    data={'document_type': doc_obj.documnet_type.code, 'country': doc_obj.state.country.code, 'state': doc_obj.state.code,
+    'user': 'test user 2', 'code': '0000111100001111'})    
+     
+    print(resp.status_code)
+    if resp.status_code != 200:
+        return HttpResponse('Failed')
+    print(resp.json())
     return HttpResponse('HELLO')
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -44,7 +66,7 @@ class TestAPI(View):
 
     class InvalidRequestData(Exception): pass
     def post(self, request: HttpRequest):
-
+        
         try:
             # successfuly parse the request
             request_data = self.post_request_parser(request)
@@ -66,6 +88,7 @@ class TestAPI(View):
         except UH.UserAlreadyExists as err:
             try:
                 UDH = UserDataHandler()
+                print('>', user_data, request_data['required'])
                 step_response = UDH.next_steps(user_data, request_data['required'])
 
                 default_payload['step_response'] = step_response
@@ -75,6 +98,12 @@ class TestAPI(View):
                 default_payload['error_comment'] = ''
                 default_payload['comment'] = "Everything went well"
 
+            except UDH.OCR.OCRFAILED as err:
+                default_payload['status'] = 'failed'
+                default_payload['error'] = 'OCRFAILED'
+                default_payload['error_type'] = 'serious'
+                default_payload['error_comment'] = f'ocr failed'
+            
             except UDH.UserAlreadyExistsForClient as err:
                 default_payload['status'] = 'failed'
                 default_payload['error'] = 'UserAlreadyExistsForClient'
@@ -137,6 +166,7 @@ class TestAPI(View):
                 default_payload['error'] = 'Server500'
                 default_payload['error_type'] = '500'
                 default_payload['error_comment'] = 'sorry for the inconvinience!'
+                raise err
 
         except UH.ClientDoesNotExist as err:
             default_payload['status'] = 'failed'
@@ -167,6 +197,7 @@ class TestAPI(View):
             default_payload['error'] = 'Server500'
             default_payload['error_type'] = '500'
             default_payload['error_comment'] = 'sorry for the inconvinience!'
+            raise err
 
         return JsonResponse(default_payload)
 
