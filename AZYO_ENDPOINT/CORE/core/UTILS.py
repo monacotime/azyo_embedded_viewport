@@ -10,13 +10,16 @@ class Request:
     @staticmethod
     def save_requested_image(url: str, parent, name, extension='png'):
         try:
-            save_here = Path(parent) / name
+            save_here: Path = Path(parent) / name
 
             resp = requests.get(url, stream=True)
             if resp.status_code == 200:
                 with save_here.open('wb') as f:
                     resp.raw.decode_content = True
                     shutil.copyfileobj(resp.raw, f)
+
+            if not save_here.exists():
+                return False, None
             
             return True, save_here
 
