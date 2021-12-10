@@ -370,9 +370,11 @@ class UserDataHandler(UserHandle):
         results = {
             'selfie_img': self.get_base64imgstr_from_file(self.get_user_selfie_image_path(user_data)),
             'ocr_img': self.get_base64imgstr_from_file(self.get_user_docprofilepic_path(user_data)),
-            'match_percentage': 'true' if status else 'false'
+            'match_status': 'true' if status else 'false',
+            'match_percentage': confidence
         }
-        print(results)
+        print(results["match_percentage"])
+        print(results["match_status"])
 
         # generate and save kyc number
 
@@ -511,7 +513,7 @@ class UserDataHandler(UserHandle):
             fh.write(base64.decodebytes(base64imagestr_encoded))
 
     # move this to UTILS next
-    def get_base64imgstr_from_file(path):
+    def get_base64imgstr_from_file(self, path):
         with open(path, 'rb') as f:
             image_read = base64.b64encode(f.read()).decode('utf-8')
 

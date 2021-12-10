@@ -12,7 +12,7 @@ class Request:
         try:
             save_here = Path(parent) / name
 
-            resp = requests.get('http://103.93.17.125:5001/static/img/ims/irof4aThwCY8IXH7.jpg', stream=True)
+            resp = requests.get(url, stream=True)
             if resp.status_code == 200:
                 with save_here.open('wb') as f:
                     resp.raw.decode_content = True
