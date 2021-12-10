@@ -114,7 +114,7 @@ class TestAPI(View):
                 default_payload['status'] = 'failed'
                 default_payload['error'] = 'UserAlreadyExistsForClient'
                 default_payload['error_type'] = 'serious'
-                default_payload['error_comment'] = f'client matches with user {err.user_name}'
+                default_payload['error_comment'] = f'No face detected in submitted document'
 
             except UDH.FR.NoFaceDetected as err:
                 default_payload['status'] = 'failed'

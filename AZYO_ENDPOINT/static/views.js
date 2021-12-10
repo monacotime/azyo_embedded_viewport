@@ -756,6 +756,8 @@ class ResultGenView extends AzyoView {
                 }
             })
         })
+
+        
         // var a = document.getElementById("ab")
         // var b = document.getElementById("bb")
         // var c = document.getElementById("cb")

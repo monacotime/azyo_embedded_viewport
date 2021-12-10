@@ -154,17 +154,30 @@ class UserDataHandler(UserHandle):
         'BACKSIDE': {'image': str, 'step': str},
         'RESULTGEN': {'step': str},
         'RESULT': {'step': str}, # Not decided yet # canceled lol!
+        'BACK': {'step': str, 'backto': str}
     }
 
     def __init__(self) -> None:
         self.__result_status_next = self.__init_result_status_next()
 
+    def check_if_finished(self, user_data):
+        user_obj = self.get_user(user_data)
+        return True if user_obj.result_status == self.event_data_order[-1] else False
+    
     class StepRequiredDataInccorect(Exception): pass
     class StepAssertionFailed(Exception): pass
-
     def next_steps(self, user_data, required_data) -> dict:
+        if self.check_if_finished(user_data):
+            return {'status': 'complete'}
+
         next_step = self.get_user_next_status(user_data)
         user_root = Path(self.get_user_root(user_data))
+
+        if required_data['step'] == 'BACK':
+            # update step for the user
+            user_obj = self.get_user(user_data)
+            user_obj.result_status = required_data['backto']
+            return {'comment': 'everything went well!'}
 
 
         print('##', next_step, required_data['step'])
@@ -192,8 +205,9 @@ class UserDataHandler(UserHandle):
             self.save_base64str_to_file(required_data['image'], str(user_backside_path))
 
         elif next_step=='RESULTGEN':
+            next_step = 'FINISHED' # Doing it manually
             return_data = self.ocr_step(user_root, user_data, required_data)
-
+            
         else:
             print('# Reached Next ELSE')
             next_steps_where_performed = False
@@ -325,6 +339,7 @@ class UserDataHandler(UserHandle):
             files={"file": fv, "file1": bv},
             data={'document_type': doc_obj.documnet_type.code, 'country': doc_obj.state.country.code, 'state': doc_obj.state.code,
             'user': 'test user 2', 'code': '0000111100001111'})
+        '''but this is what it is'''
 
         print(resp.content)
         if resp.status_code != 200:
@@ -339,6 +354,8 @@ class UserDataHandler(UserHandle):
         # save image url provided by azyo service
         face_url = data['face_url']
         status, saved_here = Request.save_requested_image(face_url, user_root, f"{user_data['user_name']}_docprofilepic.png")
+        if not status:
+            raise self.AZYOOCRFaceNotFound('where is the face?')
 
         # get docprofilepic encoding
         docprofilepic_encodings =  self.FR.get_face_encodings(saved_here)
@@ -378,8 +395,7 @@ class UserDataHandler(UserHandle):
 
         return results
 
-        # update results with match distance from ocr
-
+    # update results with match distance from ocr
     def get_user_docprofilepic_path(self, user_data):
         user_obj = self.get_user(user_data)
         if not user_obj: return None
