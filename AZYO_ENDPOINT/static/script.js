@@ -47,7 +47,19 @@ class AzyoViewPort {
         this.root.addEventListener('backto', ev => {
             if (ev.detail['success']) {
                 this.root.innerHTML = ""
-                init_view(detail['to'])
+                
+                var view = ev.detail["view"]
+                var payload = {
+                    "step": "BACK",
+                    "backto": "INITIALIZED"
+                }
+
+                var req_body = view.args['creds']
+                req_body['required'] = payload
+
+                view.send_data("/test_api/", req_body, res => {console.log("Backed up!")})
+
+                this.init_view(ev.detail['to'])
             }
             else {
                 console.log('Failed', ev.detail)

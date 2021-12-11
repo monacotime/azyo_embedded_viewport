@@ -765,12 +765,16 @@ class ResultGenView extends AzyoView {
         this.send_data("/test_api/", req_body, res => {
             if (res['status'] !== 'success') {
 
-                c.setAttribute("class", "fa fa-cross")
+                c.setAttribute("class", "fa fa-times")
+
+                document.getElementById("azyo_res").innerHTML = "Document validation failed. Please Retry."
 
                 this.detail['success'] = true
                 this.detail['name'] = res['error']
                 this.detail['message'] = res['error_comment']
                 this.detail['to'] = 1
+                this.detail['view'] = this
+                this.detail['backto'] = "INITIALIZED"
 
                 this.next_btn.innerHTML = "Retry"
                 this.footer.insertBefore(this.next_btn, this.cc)
@@ -781,7 +785,6 @@ class ResultGenView extends AzyoView {
             }
             else {
                 this.detail['success'] = true
-                c.setAttribute("class", "fa fa-check")
 
                 var result = res["step_response"]
 
@@ -792,6 +795,7 @@ class ResultGenView extends AzyoView {
                 var resz = result["match_status"].toUpperCase()
                 
                 if (resz == "TRUE"){
+                    c.setAttribute("class", "fa fa-check")
                     var disp_res = "Face match confirmed"
                     this.next_btn.innerHTML = "Thank You"
 
@@ -800,6 +804,7 @@ class ResultGenView extends AzyoView {
                     })
 
                 } else {
+                    c.setAttribute("class", "fa fa-times")
                     var disp_res = "Faces did not match"
                     this.next_btn.innerHTML = "Retry"
 
@@ -807,6 +812,8 @@ class ResultGenView extends AzyoView {
                     this.detail['name'] = res['error']
                     this.detail['message'] = res['error_comment']
                     this.detail['to'] = 1
+                    this.detail['view'] = this
+                    this.detail['backto'] = "INITIALIZED"
 
                     this.next_btn.addEventListener('click', ev => {
                         this.next_btn.dispatchEvent(this.get_back_to_event(this.detail))
