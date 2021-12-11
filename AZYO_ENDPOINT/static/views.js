@@ -886,8 +886,7 @@ class FineshedView extends AzyoView {
 
     get_results() {
         var req_body = this.args['creds']
-        req_body['required'] = {"step": "RESULTGEN"}
-        console.log(req_body)
+        req_body['required'] = {"step": ""}
         this.send_data("/test_api/", req_body, res => {
             console.log(res)
             if (res['status'] !== 'success') {

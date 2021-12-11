@@ -180,10 +180,10 @@ class UserDataHandler(UserHandle):
                             selfie_path = self.get_user_selfie_image_path(user_data)
                             selfie_img_base64 = self.get_base64imgstr_from_file(selfie_path)
 
-                            return {'status': 'complete', 'kyc_number': kyc_number,
-                            'results': {'match precentahe': match_percentage, 'selfie_image': selfie_img_base64},
+                            return {
+                                'status': 'complete', 'kyc_number': kyc_number,
+                                'results': {'match precentahe': match_percentage, 'selfie_image': selfie_img_base64},
                             }
-
 
                 return {'status': 'complete', 'kyc_number': kyc_number}
             else: 
