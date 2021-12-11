@@ -11,6 +11,9 @@ class Request:
     def save_requested_image(url: str, parent, name, extension='png'):
         try:
             save_here: Path = Path(parent) / name
+            
+            if save_here.exists() :
+                save_here.unlink()
 
             resp = requests.get(url, stream=True)
             if resp.status_code == 200:

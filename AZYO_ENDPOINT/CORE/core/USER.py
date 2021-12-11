@@ -391,7 +391,12 @@ class UserDataHandler(UserHandle):
         if status: # match
             E_distance = self.FR.compare_distance(user_encodings, docprofilepic_encodings)[0]
             confidence = (1 - E_distance) * 100
+            if confidence >= 60:
+                status = [True]
+            else:
+                status = [False]
             ocr_result_status = status[0] # can be True/ False
+
         else: # does not match
             raise self.AZYOOCRFaceNotFound('OCR result comparsion error')
 
@@ -408,9 +413,11 @@ class UserDataHandler(UserHandle):
         results = {
             'selfie_img': self.get_base64imgstr_from_file(self.get_user_selfie_image_path(user_data)),
             'ocr_img': self.get_base64imgstr_from_file(self.get_user_docprofilepic_path(user_data)),
-            'match_percentage': 'true' if status else 'false'
+            'match_status': 'true' if ocr_result_status else 'false',
+            'match_percentage': confidence
         }
-        print(results)
+        print("match Percet>>", results["match_percentage"])
+        print(results["match_status"])
 
         # generate and save kyc number
 
@@ -548,7 +555,7 @@ class UserDataHandler(UserHandle):
             fh.write(base64.decodebytes(base64imagestr_encoded))
 
     # move this to UTILS next
-    def get_base64imgstr_from_file(path):
+    def get_base64imgstr_from_file(self, path):
         with open(path, 'rb') as f:
             image_read = base64.b64encode(f.read()).decode('utf-8')
 

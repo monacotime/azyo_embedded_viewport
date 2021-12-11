@@ -29,7 +29,7 @@ class AzyoViewPort {
             'RESULT': 6
         }
 
-        
+
         
         this.#init_root(root_div)
         this.client_code = client_code
@@ -60,14 +60,19 @@ class AzyoViewPort {
         this.root.addEventListener('backto', ev => {
             if (ev.detail['success']) {
                 this.root.innerHTML = ""
+                
+                var view = ev.detail["view"]
+                var payload = {
+                    "step": "BACK",
+                    "backto": "INITIALIZED"
+                }
 
-                var view = ev.detail['view']
-                var req_body = this.args['creds']
-                req_body['required'] = {"step": "SELFIE"}
-                console.log(req_body)
-                .send_data("/test_api/")
+                var req_body = view.args['creds']
+                req_body['required'] = payload
 
-                init_view(detail['to'])
+                view.send_data("/test_api/", req_body, res => {console.log("Backed up!")})
+
+                this.init_view(ev.detail['to'])
             }
             else {
                 console.log('Failed', ev.detail)

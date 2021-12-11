@@ -74,15 +74,15 @@ WSGI_APPLICATION = 'AZYO_ENDPOINT.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.mysql',
-         'OPTIONS': {'charset': 'utf8mb4'},
-         'NAME': 'azyoep',
-         'USER': 'root',
-         'PASSWORD': '1Supermscp!',
-         'HOST': '127.0.0.1',
-         'PORT': '3306',
-     }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {'charset': 'utf8mb4'},
+        'NAME': 'azyoep',
+        'USER': 'root',
+        'PASSWORD': '1234',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+    }
 }
 
 
