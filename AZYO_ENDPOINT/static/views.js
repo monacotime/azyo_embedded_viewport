@@ -834,3 +834,47 @@ class ThankyouView extends AzyoView {
         root_div.appendChild(wrapper)
     }
 }
+
+class FineshedView extends AzyoView {
+    render_view(root_div) {
+        var [wrapper, content, header, body, footer, error, cc] = this.AVR.get_azyo_content()
+        this.error = error
+
+        header.innerHTML = `<h5 class="modal-title" id="exampleModalLabel">Verification Complete</h5>
+        <button type="button" class="close azyo-close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>`
+
+        body.innerHTML = "Your azyo verification is complete here is your kyc number {------------}"
+        
+        var next_btn = document.createElement('button')
+        next_btn.type="button"
+        next_btn.classList.add('btn', 'btn-primary')
+        next_btn.innerHTML = "Thank You"
+
+        footer.insertBefore(next_btn, cc)
+
+        root_div.appendChild(wrapper)
+    }
+
+    get_results() {
+        var req_body = this.args['creds']
+        req_body['required'] = {"step": "RESULTGEN"}
+        console.log(req_body)
+        this.send_data("/test_api/", req_body, res => {
+            console.log(res)
+            if (res['status'] !== 'success') {
+                this.detail['success'] = false
+                this.detail['name'] = res['error']
+                this.detail['message'] = res['error_comment']
+                this.next_btn.dispatchEvent(this.get_next_event(this.detail))
+            }
+            else {
+                this.detail['success'] = false
+                this.detail['message'] = 'I want to see response'
+                console.log(res)
+                this.next_btn.dispatchEvent(this.get_next_event(this.detail))
+            }
+        })
+    }
+}

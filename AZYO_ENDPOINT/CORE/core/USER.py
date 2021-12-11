@@ -5,7 +5,7 @@ from django.db.models import Q
 from .UTILS import AzyoOCRService, Request, FaceRecognition
 from pathlib import Path
 import base64
-from numpy import array
+from numpy import array, mat
 import requests
 
 
@@ -167,8 +167,28 @@ class UserDataHandler(UserHandle):
     class StepRequiredDataInccorect(Exception): pass
     class StepAssertionFailed(Exception): pass
     def next_steps(self, user_data, required_data) -> dict:
-        if self.check_if_finished(user_data):
-            return {'status': 'complete'}
+        
+        if required_data['step'] == 'CHECK':
+            if self.check_if_finished(user_data):
+                if required_data:
+                    result_obj = self.get_user_results(user_data)
+                    kyc_number = result_obj.kyc_number
+                    if 'operation' in required_data:
+                        if 'GETRESULTS' == required_data['operation']:
+                            match_percentage = result_obj.selfie_document_profile_pic_match_percentage
+                            
+                            selfie_path = self.get_user_selfie_image_path(user_data)
+                            selfie_img_base64 = self.get_base64imgstr_from_file(selfie_path)
+
+                            return {'status': 'complete', 'kyc_number': kyc_number,
+                            'results': {'match precentahe': match_percentage, 'selfie_image': selfie_img_base64},
+                            }
+
+
+                return {'status': 'complete', 'kyc_number': kyc_number}
+            else: 
+                next_step = self.get_user_next_status(user_data)
+                return {'status': 'incomplete', 'step': next_step}
 
         next_step = self.get_user_next_status(user_data)
         user_root = Path(self.get_user_root(user_data))
@@ -177,6 +197,7 @@ class UserDataHandler(UserHandle):
             # update step for the user
             user_obj = self.get_user(user_data)
             user_obj.result_status = required_data['backto']
+            user_obj.save()
             return {'comment': 'everything went well!'}
 
 

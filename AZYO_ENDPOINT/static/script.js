@@ -19,8 +19,19 @@ class AzyoViewPort {
     #views = null
 
     constructor(root_div, client_code, user_name, views=null) {
+        this.finished = FineshedView()
+        this.index = {
+            'SELFIE': 1,
+            'DOCTYPE': 2,
+            'FRONTSIDE': 3,
+            'BACKSIDE': 4,
+            'RESULTGEN': 5,
+            'RESULT': 6
+        }
+
+        
+        
         this.#init_root(root_div)
-        // if (views) {register_views(views)}
         this.client_code = client_code
         this.user_name = user_name
         this.register_views([
@@ -33,6 +44,8 @@ class AzyoViewPort {
             [ThankyouView, {}],
         ], true)
     }
+
+
 
     #init_root(root_div) {
         this.root = root_div
@@ -47,6 +60,13 @@ class AzyoViewPort {
         this.root.addEventListener('backto', ev => {
             if (ev.detail['success']) {
                 this.root.innerHTML = ""
+
+                var view = ev.detail['view']
+                var req_body = this.args['creds']
+                req_body['required'] = {"step": "SELFIE"}
+                console.log(req_body)
+                .send_data("/test_api/")
+
                 init_view(detail['to'])
             }
             else {
@@ -85,7 +105,9 @@ class AzyoViewPort {
     }
 
     init_view(index) {
-        if(this.finished_()) this.#unset_view(this.#views[this.#current])
+        if(this.finished_()) {
+            this.#do_this_on_finished()
+        }
         this.#current = index
 
         var initialized_view = this.#views[index]
@@ -94,10 +116,14 @@ class AzyoViewPort {
     
     finished_() { return (this.#ends === this.#current)? true: false}
 
+    #do_this_on_finished() {
+        this.#set_view(this.finished)
+    }
+
     next() {
         console.log('next')
         if(this.finished_()) {
-            this.after_finish()
+            this.#do_this_on_finished()
         }
         else {
             console.log('next else')
