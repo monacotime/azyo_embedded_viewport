@@ -719,8 +719,9 @@ class ResultGenView extends AzyoView {
                         <img id = "img1" class = "azyo_res_img" src="" alt="" />
                         <img id = "img2" class = "azyo_res_img" src="" alt="" />
                     </div>
-                    <div id = "azyo_res"></span>
-                    
+                    <div id = "azyo_res"></div>
+                    <br>
+                    <div id = "kyc_no"></div>
                     </div>
                 </div>
         `                
@@ -746,8 +747,10 @@ class ResultGenView extends AzyoView {
             if (res['status'] !== 'success') {
 
                 c.setAttribute("class", "fa fa-times")
-
-                document.getElementById("azyo_res").innerHTML = "Document validation failed. Please Retry."
+                
+                var res_div = document.getElementById("azyo_res")
+                res_div.setAttribute("style", "color: red")
+                res_div.innerHTML = "Document validation failed. Please Retry."
 
                 this.detail['success'] = true
                 this.detail['name'] = res['error']
@@ -762,8 +765,7 @@ class ResultGenView extends AzyoView {
                 this.next_btn.addEventListener('click', ev => {
                     this.next_btn.dispatchEvent(this.get_back_to_event(this.detail))
                 })
-            }
-            else {
+            } else {
                 this.detail['success'] = true
 
                 var result = res["step_response"]
@@ -773,10 +775,12 @@ class ResultGenView extends AzyoView {
                 document.getElementById("img1").setAttribute("src", result["selfie_img"])
                 document.getElementById("img2").setAttribute("src", result["ocr_img"])
                 var resz = result["match_status"].toUpperCase()
-                
+                var res_div = document.getElementById("azyo_res")
+
                 if (resz == "TRUE"){
                     c.setAttribute("class", "fa fa-check")
                     var disp_res = "Face match confirmed"
+                    res_div.setAttribute("style", "color: green")
                     this.next_btn.innerHTML = "Thank You"
 
                     this.next_btn.addEventListener('click', ev => {
@@ -786,6 +790,7 @@ class ResultGenView extends AzyoView {
                 } else {
                     c.setAttribute("class", "fa fa-times")
                     var disp_res = "Faces did not match"
+                    res_div.setAttribute("style", "color: red")
                     this.next_btn.innerHTML = "Retry"
 
                     this.detail['success'] = true
@@ -799,8 +804,9 @@ class ResultGenView extends AzyoView {
                         this.next_btn.dispatchEvent(this.get_back_to_event(this.detail))
                     })
                 }
-                
-                document.getElementById("azyo_res").innerHTML = disp_res
+
+
+                res_div.innerHTML = disp_res
                 
                 this.footer.insertBefore(this.next_btn, this.cc)
 
