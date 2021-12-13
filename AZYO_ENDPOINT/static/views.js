@@ -53,7 +53,6 @@ class AzyoViewRender {
 
     get_azyo_error() {
         var div = this.create_div()
-        console.log(div)
         return div
     }
 
@@ -113,19 +112,15 @@ class AzyoView {
     init_args(args) {this.args = args}
 
     init_view() {
-        console.log('view was initialized')
     }
     
     distroy_view() {
-        console.log('view was distroyed')
     }
 
     render_view(root_div) {
-        console.log('view rendered')
     }
 
     error_occured(name, message) {
-        console.log(this.error)
         if (this.error) {
             this.error.innerHTML = `<div style="color:red; text-align:center;">` + message + `</div>`
         }
@@ -155,7 +150,7 @@ class VideoUtils {
                 video.srcObject = stream;
             })
             .catch(function (err0r) {
-                console.log("Something went wrong!");
+    
             });
         }
     }
@@ -173,7 +168,6 @@ class VideoUtils {
     }
 
     static takepicture(video) {
-        console.log(video)
         var height = video.height
         var width = video.width
         
@@ -288,9 +282,9 @@ class SelfieView extends AzyoView {
 
             var req_body = this.args['creds']
             req_body['required'] = {"image": photo, "step": "SELFIE"}
-            console.log(req_body)
+
             this.send_data("/test_api/", req_body, res => {
-                console.log(res)
+    
                 if (res['status'] !== 'success') {
                     this.detail['success'] = false
                     this.detail['name'] = res['error']
@@ -439,9 +433,9 @@ class DocTypeView extends AzyoView {
 
             var req_body = this.args['creds']
             req_body['required'] = {'document_type': doctype.innerText, 'country': country.innerText, 'state': state.innerText, "step": "DOCTYPE"}
-            console.log(req_body)
+
             this.send_data("/test_api/", req_body, res => {
-                console.log(res)
+    
                 if (res['status'] !== 'success') {
                     this.detail['success'] = false
                     this.detail['name'] = res['error']
@@ -460,7 +454,7 @@ class DocTypeView extends AzyoView {
     distroy_view() {
         // var req_body = this.args['creds']
         // req_body['required'] = {'document_type': "LICENCE", 'country': 'IND', 'state': 'MH', "step": "DOCTYPE"}
-        // this.send_data("/test_api/", req_body, res => console.log(res))
+        // this.send_data("/test_api/", req_body, res 
     }
 }
 
@@ -653,7 +647,7 @@ class BacksideView extends AzyoView {
 
             var req_body = this.args['creds']
             req_body['required'] = {"image": photo, "step": "BACKSIDE"}
-            console.log(req_body)
+
             this.send_data("/test_api/", req_body, res => {
                 if (res['status'] !== 'success') {
                     this.detail['success'] = false
@@ -748,7 +742,6 @@ class ResultGenView extends AzyoView {
         
         var req_body = this.args['creds']
         req_body['required'] = {"step": "RESULTGEN"}
-        console.log(req_body)
         this.send_data("/test_api/", req_body, res => {
             if (res['status'] !== 'success') {
 
@@ -775,7 +768,7 @@ class ResultGenView extends AzyoView {
 
                 var result = res["step_response"]
 
-                console.log(result)
+    
 
                 document.getElementById("img1").setAttribute("src", result["selfie_img"])
                 document.getElementById("img2").setAttribute("src", result["ocr_img"])
@@ -880,13 +873,11 @@ class FineshedView extends AzyoView {
         if (get) req_body['required']['operation'] = 'GETRESULTS'
         this.response = null
         this.send_data("/test_api/", req_body, res => {
-            console.log(res)
-            console.log(this.response)
+
             this.response = res['step_response']
-            console.log(this.response)
+
         })
         
-        console.log('?', this.response)
         return this.response
     }
 }

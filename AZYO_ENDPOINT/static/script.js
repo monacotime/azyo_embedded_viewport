@@ -8,9 +8,7 @@ var jquery = document.createElement('script')
 jquery.setAttribute('src', "https://code.jquery.com/jquery-3.6.0.js")
 jquery.setAttribute('integrity', "sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=")
 jquery.setAttribute('crossorigin', "anonymous")
-// console.log(document.getElementById('exampleModal'))
 document.getElementsByTagName('head')[0].appendChild(jquery)
-console.log(document.getElementsByTagName('head')[0])
 
 
 class AzyoViewPort {
@@ -18,9 +16,13 @@ class AzyoViewPort {
     #ends = null
     #views = null
 
-    constructor(root_div, client_code, user_name, views=null) {
+    finish_on = null
+
+    constructor(root_div, client_code, user_name, on_finish=null) {
         this.client_code = client_code
         this.user_name = user_name
+        this.on_finish(on_finish)
+
         this.#init_root(root_div)
 
         var view_args = {'creds': {'client_code': this.client_code, 'user_name': this.user_name}}
@@ -35,11 +37,11 @@ class AzyoViewPort {
         }
 
         var response = this.finished.check_results()
-        console.log('>>', response)
         if (response['status'] === 'complete') {
             this.kyc_number = response['kyc_number']
             this.finished.render_view(this.root, {'kyc_number': this.kyc_number})
             this.finished.init_view()
+            this.after_finish()
         }
         else {
 
@@ -86,7 +88,7 @@ class AzyoViewPort {
                 var req_body = view.args['creds']
                 req_body['required'] = payload
 
-                view.send_data("/test_api/", req_body, res => {console.log("Backed up!")})
+                view.send_data("/test_api/", req_body, res => {})
 
                 this.init_view(ev.detail['to'])
             }
@@ -118,16 +120,11 @@ class AzyoViewPort {
 
     init_first_view() {
         this.init_view(0)
-        // if(this.finished_()) this.#unset_view(this.#views[this.#current])
-        // this.#current = 0
-
-        // var first_view = this.#views[0]
-        // this.#set_view(first_view)
     }
 
     init_view(index) {
         if(this.finished_()) {
-            this.#do_this_on_finished()
+            after_finish()
         }
         this.#current = index
 
@@ -142,12 +139,10 @@ class AzyoViewPort {
     }
 
     next() {
-        console.log('next')
         if(this.finished_()) {
-            this.#do_this_on_finished()
+            this.after_finish()
         }
         else {
-            console.log('next else')
             this.#unset_view(this.#views[this.#current])
 
             var new_current = this.#current + 1
@@ -157,9 +152,13 @@ class AzyoViewPort {
         }
     }
 
+    after_finish() {
+        var result = this.finished.check_results(true)['results']
+        this.finish_on(result)
+    }
 
     on_finish(do_something) {
-        this.after_finish = do_something
+        this.finish_on = do_something
     }
 
     #set_view(view) {

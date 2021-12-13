@@ -227,10 +227,16 @@ class UserDataHandler(UserHandle):
             return_data = self.ocr_step(user_root, user_data, required_data)
             kyc_number = str(random.randint(1000000000000000, 9999999999999999))
             return_data['kyc'] = kyc_number
-            next_step = 'FINISHED' # Doing it manually
-            result_obj = self.get_user_results(user_data)
-            result_obj.kyc_number = kyc_number
-            result_obj.save()
+            
+            if return_data['match_status'] == 'true':
+                next_step = 'FINISHED' # Doing it manually
+            
+                result_obj = self.get_user_results(user_data)
+                result_obj.kyc_number = kyc_number
+                result_obj.save()
+                client_obj = self.get_client_object(user_data['client_code'])
+                client_obj.completed_users += 1
+                client_obj.save()
 
         else:
             print('# Reached Next ELSE')
