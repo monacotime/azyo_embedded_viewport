@@ -7,7 +7,7 @@ from pathlib import Path
 import base64
 from numpy import array, mat
 import requests
-
+import random
 
 class UserHandle:
     requirements = {
@@ -187,8 +187,8 @@ class UserDataHandler(UserHandle):
 
                 return {'status': 'complete', 'kyc_number': kyc_number}
             else: 
-                next_step = self.get_user_next_status(user_data)
-                return {'status': 'incomplete', 'step': next_step}
+                current_step = self.get_user_next_status(user_data)
+                return {'status': 'incomplete', 'step': current_step}
 
         next_step = self.get_user_next_status(user_data)
         user_root = Path(self.get_user_root(user_data))
@@ -200,8 +200,6 @@ class UserDataHandler(UserHandle):
             user_obj.save()
             return {'comment': 'everything went well!'}
 
-
-        print('##', next_step, required_data['step'])
         if next_step != required_data['step']:
             raise self.StepAssertionFailed('step meta received in the requirements does not match next steps')
 
@@ -226,9 +224,14 @@ class UserDataHandler(UserHandle):
             self.save_base64str_to_file(required_data['image'], str(user_backside_path))
 
         elif next_step=='RESULTGEN':
-            next_step = 'FINISHED' # Doing it manually
             return_data = self.ocr_step(user_root, user_data, required_data)
-            
+            kyc_number = str(random.randint(1000000000000000, 9999999999999999))
+            return_data['kyc'] = kyc_number
+            next_step = 'FINISHED' # Doing it manually
+            result_obj = self.get_user_results(user_data)
+            result_obj.kyc_number = kyc_number
+            result_obj.save()
+
         else:
             print('# Reached Next ELSE')
             next_steps_where_performed = False
@@ -249,8 +252,6 @@ class UserDataHandler(UserHandle):
         for user_results in self.get_all_selfie_result_for_user_client_generator(user_data):    
             test_encoding = self.FR.get_encodings_from_str(user_results.selfie_encodings)
             results = self.FR.compare_encodings(user_selfie_encoding, test_encoding)
-            
-            print('>>', results, type(results))
             
             if results[0]:
                 user_name = user_results.user.user_name
@@ -343,31 +344,30 @@ class UserDataHandler(UserHandle):
         # user_data = {'client_code': '0000111100001111', 'user_name': 'test user 2'}
         '''This was not meant to be like this'''
         front_path = self.get_user_doc_frontside_image_path(user_data)
-        print(front_path, type(front_path), Path(front_path).exists())
+        # print(front_path, type(front_path), Path(front_path).exists())
         back_path = self.get_user_doc_backside_image_path(user_data)
-        print(back_path, type(back_path), Path(back_path).exists())
+        # print(back_path, type(back_path), Path(back_path).exists())
         fv = self.OCR.read_image_as_bytes(front_path)
         bv = self.OCR.read_image_as_bytes(back_path)
-        print(len(fv), type(fv))
-        print(len(bv), type(bv))
+        # print(len(fv), type(fv))
+        # print(len(bv), type(bv))
         doc_obj = self.if_document_exists_for_user(user_data)
-        print(f'''
-        {doc_obj.documnet_type.code}, {type(doc_obj.documnet_type.code)}
-        {doc_obj.state.country.code}, {type(doc_obj.state.country.code)}
-        {doc_obj.state.code}, {type(doc_obj.state.code)}
-        ''')
+        # print(f'''
+        # {doc_obj.documnet_type.code}, {type(doc_obj.documnet_type.code)}
+        # {doc_obj.state.country.code}, {type(doc_obj.state.country.code)}
+        # {doc_obj.state.code}, {type(doc_obj.state.code)}
+        # ''')
         resp = requests.post("http://103.93.17.125:5001/api/v2/docs",
             files={"file": fv, "file1": bv},
             data={'document_type': doc_obj.documnet_type.code, 'country': doc_obj.state.country.code, 'state': doc_obj.state.code,
             'user': 'test user 2', 'code': '0000111100001111'})
         '''but this is what it is'''
-
-        print(resp.content)
+        
         if resp.status_code != 200:
             raise Exception('not again')
         else:
             data = resp.json()
-            print(data)
+            # print(data)
 
         # data = formated
         if not 'face_url' in data:

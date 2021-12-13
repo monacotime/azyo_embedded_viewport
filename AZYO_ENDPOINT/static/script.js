@@ -19,32 +19,48 @@ class AzyoViewPort {
     #views = null
 
     constructor(root_div, client_code, user_name, views=null) {
-        this.finished = FineshedView()
+        this.client_code = client_code
+        this.user_name = user_name
+        this.#init_root(root_div)
+
+        var view_args = {'creds': {'client_code': this.client_code, 'user_name': this.user_name}}
+        this.finished = new FineshedView(view_args)
         this.index = {
-            'SELFIE': 1,
+            'INITIALIZED': 0,
+            'SELFIE': 0,
             'DOCTYPE': 2,
             'FRONTSIDE': 3,
             'BACKSIDE': 4,
             'RESULTGEN': 5,
-            'RESULT': 6
         }
 
+        var response = this.finished.check_results()
+        console.log('>>', response)
+        if (response['status'] === 'complete') {
+            this.kyc_number = response['kyc_number']
+            this.finished.render_view(this.root, {'kyc_number': this.kyc_number})
+            this.finished.init_view()
+        }
+        else {
 
-        
-        this.#init_root(root_div)
-        this.client_code = client_code
-        this.user_name = user_name
-        this.register_views([
-            [GreetingsView, {}],
-            [SelfieView, {'VideoUtils': VideoUtils}],
-            [DocTypeView, {}],
-            [FrontsideView, {'VideoUtils': VideoUtils}],
-            [BacksideView, {'VideoUtils': VideoUtils}],
-            [ResultGenView, {}],
-            [ThankyouView, {}],
-        ], true)
+            var current_step = response['step']
+            var current_index = this.index[current_step]
+            this.register_views([
+                [GreetingsView, {}],
+                [SelfieView, {'VideoUtils': VideoUtils}],
+                [DocTypeView, {}],
+                [FrontsideView, {'VideoUtils': VideoUtils}],
+                [BacksideView, {'VideoUtils': VideoUtils}],
+                [ResultGenView, {}],
+                [ThankyouView, {}],
+            ], (current_index===0)? true: false)
+            
+            if (current_index!==0) {
+                this.init_view(current_index)
+            }
+
+        }
     }
-
 
 
     #init_root(root_div) {

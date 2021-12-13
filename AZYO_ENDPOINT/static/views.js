@@ -92,6 +92,15 @@ class AzyoView {
         });
     }
 
+    get_finished_event(detail) {
+        return new CustomEvent("finished", {
+            detail: detail,
+            bubbles: true,
+            cancelable: true,
+            composed: false,
+        });
+    }
+
     get_back_to_event(detail) {
         return new CustomEvent("backto", {
             detail: detail,
@@ -131,6 +140,7 @@ class AzyoView {
             contentType: "application/json",
             processData: false,
             success: on_success,
+            async: false,
             error: err => console.error('err')
         });
     }
@@ -732,29 +742,6 @@ class ResultGenView extends AzyoView {
     }
 
     init_view() {
-
-
-        // this.next_btn.addEventListener('click', ev => {
-
-        //     var req_body = this.args['creds']
-        //     req_body['required'] = {"step": "RESULTGEN"}
-        //     console.log(req_body)
-        //     this.send_data("/test_api/", req_body, res => {
-        //         console.log(res)
-        //         if (res['status'] !== 'success') {
-        //             this.detail['success'] = false
-        //             this.detail['name'] = res['error']
-        //             this.detail['message'] = res['error_comment']
-        //             this.next_btn.dispatchEvent(this.get_next_event(this.detail))
-        //         }
-        //         else {
-        //             this.detail['success'] = false
-        //             this.detail['message'] = 'I want to see response'
-        //             console.log(res)
-        //             this.next_btn.dispatchEvent(this.get_next_event(this.detail))
-        //         }
-        //     })
-        // })
         var a = document.getElementById("ab")
         var b = document.getElementById("bb")
         var c = document.getElementById("cb")
@@ -863,7 +850,7 @@ class ThankyouView extends AzyoView {
 }
 
 class FineshedView extends AzyoView {
-    render_view(root_div) {
+    render_view(root_div, args) {
         var [wrapper, content, header, body, footer, error, cc] = this.AVR.get_azyo_content()
         this.error = error
 
@@ -872,7 +859,10 @@ class FineshedView extends AzyoView {
             <span aria-hidden="true">&times;</span>
         </button>`
 
-        body.innerHTML = "Your azyo verification is complete here is your kyc number {------------}"
+        body.innerHTML = `
+        <div style="text-align:center;">
+        Your azyo verification is complete here is your e-kyc number <b>` + args['kyc_number'] + `</b>
+        </div>`
         
         var next_btn = document.createElement('button')
         next_btn.type="button"
@@ -884,23 +874,19 @@ class FineshedView extends AzyoView {
         root_div.appendChild(wrapper)
     }
 
-    get_results() {
+    check_results(get=false) {
         var req_body = this.args['creds']
-        req_body['required'] = {"step": ""}
+        req_body['required'] = {"step": "CHECK"}
+        if (get) req_body['required']['operation'] = 'GETRESULTS'
+        this.response = null
         this.send_data("/test_api/", req_body, res => {
             console.log(res)
-            if (res['status'] !== 'success') {
-                this.detail['success'] = false
-                this.detail['name'] = res['error']
-                this.detail['message'] = res['error_comment']
-                this.next_btn.dispatchEvent(this.get_next_event(this.detail))
-            }
-            else {
-                this.detail['success'] = false
-                this.detail['message'] = 'I want to see response'
-                console.log(res)
-                this.next_btn.dispatchEvent(this.get_next_event(this.detail))
-            }
+            console.log(this.response)
+            this.response = res['step_response']
+            console.log(this.response)
         })
+        
+        console.log('?', this.response)
+        return this.response
     }
 }

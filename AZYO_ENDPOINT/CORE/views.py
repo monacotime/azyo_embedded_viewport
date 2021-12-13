@@ -88,7 +88,7 @@ class TestAPI(View):
         except UH.UserAlreadyExists as err:
             try:
                 UDH = UserDataHandler()
-                print('>', user_data, request_data['required'])
+                # print('>', user_data, request_data['required'])
                 step_response = UDH.next_steps(user_data, request_data['required'])
 
                 default_payload['step_response'] = step_response
