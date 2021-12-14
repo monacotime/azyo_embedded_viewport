@@ -320,15 +320,19 @@ class DocTypeView extends AzyoView {
                     Demo Inc would like to confirm your identity
                 </h6>
                 <br>
-                <div>
-                    <div>
+                <div style = "display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-content: center;
+                padding-top: 10px;">
+                    <div style = "max-width: 50%;">
                         <ul>
                             <li>Prepare a valid government-issued identity document</li>
                             <li>Check if your device’s camera is uncovered and working</li>
                             <li>Be prepared to take photos of your ID</li>
                         </ul>
                     </div>
-                    <div style="margin-left: 40px; font-size: large;" id = "azyo_selection">
+                    <div style="margin-left: 40px; font-size: large; min-width: 30%;" id = "azyo_selection">
                         <span>
                             <h7>
                                 Country:     
@@ -691,7 +695,6 @@ class ResultGenView extends AzyoView {
         <h6 class="azyo-modal-body-title">
                     Please wait while we analyse your images
                 </h6>
-                <br>
                 <div style="margin-left: 60px;">
                     <div>
                         <div class = "azyo-instr">
@@ -714,14 +717,19 @@ class ResultGenView extends AzyoView {
                         </div>
                     </div>
                 </div>
-                <div class= "res_holder">
-                    <div class = "res_img_holder">
-                        <img id = "img1" class = "azyo_res_img" src="" alt="" />
-                        <img id = "img2" class = "azyo_res_img" src="" alt="" />
-                    </div>
-                    <div id = "azyo_res"></div>
-                    <br>
-                    <div id = "kyc_no"></div>
+                <div style = "display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-content: center;">
+                    <div class= "res_holder" >
+                        <div class = "res_img_holder">
+                            <img id = "img1" class = "azyo_res_img" src="" alt="" />
+                            <img id = "img2" class = "azyo_res_img" src="" alt="" />
+                        </div>
+                        <div id = "azyo_res"></div>
+                        <br>
+                        Your KYC number is <span id = "kyc_no" style= "font-weight: bold;"></span>
+                        </div>
                     </div>
                 </div>
         `                

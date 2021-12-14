@@ -152,9 +152,26 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    max-width: 70%;
 }
 
 #azyo_res {
     font-weight: bold;
     /* Green */
+}
+
+.btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+    color: #000 !important;
+    background-color: #ffffff !important;
+    border-color: #005cbf !important;
+}
+
+.dropdown-toggle {
+    white-space: nowrap;
+    background-color: white !important;
+    color: black !important;
+}
+
+element.style {
+    font-size: 18px;
 }
