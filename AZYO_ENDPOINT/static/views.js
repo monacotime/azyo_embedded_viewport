@@ -331,10 +331,10 @@ class DocTypeView extends AzyoView {
                         <ul>
                             <li>Prepare a valid government-issued identity document</li>
                             <li>Check if your device’s camera is uncovered and working</li>
-                            <li>Be prepared to take a selfie and photos of your ID</li>
+                            <li>Be prepared to take photos of your ID</li>
                         </ul>
                     </div>
-                    <div style="margin-left: 40px; font-size: large;">
+                    <div style="margin-left: 40px; font-size: large;" id = "azyo_selection">
                         <span>
                             <h7>
                                 Country:     
