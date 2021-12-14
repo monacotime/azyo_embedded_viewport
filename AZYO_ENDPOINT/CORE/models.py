@@ -3,9 +3,10 @@ from django.db.models.fields import BinaryField, CharField
 from django.db import models
 
 class Client(Model):
-    client = CharField(max_length=16, unique=True, null=False)
-    client_data = CharField(max_length=155, unique=True, null=False)
-    client_name = CharField(max_length=155, unique=True, null=False,)
+    client = models.CharField(max_length=16, unique=True, null=False)
+    client_data = models.CharField(max_length=155, unique=True, null=False)
+    client_name = models.CharField(max_length=155, unique=True, null=False,)
+    completed_users = models.IntegerField(default=0)
 
 user_status_choice = (
     ('INITIALIZED', 'INITIALIZED'), 
@@ -43,9 +44,6 @@ class ClientUser(Model):
     user_data = CharField(max_length=155, unique=True, null=False)
     result_status = CharField(max_length=30, choices=user_status_choice, default='INITIALIZED')
     document = models.ForeignKey(Document, on_delete=models.CASCADE, null=True)
-    # country_code = CharField(max_length=5)
-    # state_code = CharField(max_length=5)
-    # document_type = models.CharField(max_length=55)
 
 
 class ClientUserResults(Model):

@@ -28,19 +28,31 @@
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <!-- from script here -->
     </div>
-    <div id="test"></div>
-    <img id="selfie" src="http://103.93.17.125:5001/static/img/ims/lC7pUVhZXP5IeviR.jpg" alt="">
     
-    <div id="drop_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
-        <p>Drag one or more files to this Drop Zone ...</p>
-    </div>
 
 </body>
     <script src="{% static 'views.js' %}"></script>
     <script src="{% static 'script.js' %}"></script>
     <script>
         const root = document.getElementById('exampleModal')
-        AV = new AzyoViewPort(root, client_code="0000111100001111", user_name="test user 2")
-        AV.on_finish(() => {AV.init_first_view()})
+        AV = new AzyoViewPort(root, client_code="0000111100001111", user_name="test user 3", 
+        on_finish = (results) => {
+            console.log('Results Obtained')
+            console.log(results)
+            
+            // $.ajax({
+            //     url: where, 
+            //     data: JSON.stringify(results),
+            //     type: "POST",
+            //     dataType: "json",
+            //     contentType: "application/json",
+            //     processData: false,
+            //     success: res => {},
+            //     async: false,
+            //     error: err => console.error('err')
+            // });
+
+            console.log('You can Do Anything With these Results')
+        })
     </script>
 </html>
