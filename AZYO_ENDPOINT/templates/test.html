@@ -35,10 +35,23 @@
     <script src="{% static 'script.js' %}"></script>
     <script>
         const root = document.getElementById('exampleModal')
-        AV = new AzyoViewPort(root, client_code="0000111100001111", user_name="test user 1", 
+        AV = new AzyoViewPort(root, client_code="0000111100001111", user_name="test user 3", 
         on_finish = (results) => {
             console.log('Results Obtained')
             console.log(results)
+            
+            // $.ajax({
+            //     url: where, 
+            //     data: JSON.stringify(results),
+            //     type: "POST",
+            //     dataType: "json",
+            //     contentType: "application/json",
+            //     processData: false,
+            //     success: res => {},
+            //     async: false,
+            //     error: err => console.error('err')
+            // });
+
             console.log('You can Do Anything With these Results')
         })
     </script>

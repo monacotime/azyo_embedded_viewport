@@ -325,7 +325,7 @@ class DocTypeView extends AzyoView {
                         <ul>
                             <li>Prepare a valid government-issued identity document</li>
                             <li>Check if your device’s camera is uncovered and working</li>
-                            <li>Be prepared to take a selfie and photos of your ID</li>
+                            <li>Be prepared to take photos of your ID</li>
                         </ul>
                     </div>
                     <div style="margin-left: 40px; font-size: large;">
@@ -762,6 +762,7 @@ class ResultGenView extends AzyoView {
                 this.next_btn.innerHTML = "Retry"
                 this.footer.insertBefore(this.next_btn, this.cc)
 
+
                 this.next_btn.addEventListener('click', ev => {
                     this.next_btn.dispatchEvent(this.get_back_to_event(this.detail))
                 })
@@ -771,18 +772,20 @@ class ResultGenView extends AzyoView {
                 var result = res["step_response"]
 
     
-
                 document.getElementById("img1").setAttribute("src", result["selfie_img"])
                 document.getElementById("img2").setAttribute("src", result["ocr_img"])
                 var resz = result["match_status"].toUpperCase()
                 var res_div = document.getElementById("azyo_res")
 
                 if (resz == "TRUE"){
+                    document.getElementById('kyc_no').innerHTML = result['kyc']
                     c.setAttribute("class", "fa fa-check")
                     var disp_res = "Face match confirmed"
                     res_div.setAttribute("style", "color: green")
+                    
                     this.next_btn.innerHTML = "Thank You"
-
+                    this.next_btn.setAttribute('data-dismiss', 'modal')
+                    this.next_btn.setAttribute('aria-label', 'Close')
                     this.next_btn.addEventListener('click', ev => {
                         this.next_btn.dispatchEvent(this.get_next_event(this.detail))
                     })
@@ -866,6 +869,8 @@ class FineshedView extends AzyoView {
         var next_btn = document.createElement('button')
         next_btn.type="button"
         next_btn.classList.add('btn', 'btn-primary')
+        next_btn.setAttribute('data-dismiss', 'modal')
+        next_btn.setAttribute('aria-label', 'Close')
         next_btn.innerHTML = "Thank You"
 
         footer.insertBefore(next_btn, cc)

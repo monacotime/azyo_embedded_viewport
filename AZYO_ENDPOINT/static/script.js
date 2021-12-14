@@ -54,7 +54,7 @@ class AzyoViewPort {
                 [FrontsideView, {'VideoUtils': VideoUtils}],
                 [BacksideView, {'VideoUtils': VideoUtils}],
                 [ResultGenView, {}],
-                [ThankyouView, {}],
+                // [ThankyouView, {}],
             ], (current_index===0)? true: false)
             
             if (current_index!==0) {
@@ -124,7 +124,7 @@ class AzyoViewPort {
 
     init_view(index) {
         if(this.finished_()) {
-            after_finish()
+            this.after_finish()
         }
         this.#current = index
 
