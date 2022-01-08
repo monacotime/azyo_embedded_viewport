@@ -198,19 +198,20 @@ class GreetingsView extends AzyoView {
             <span aria-hidden="true">&times;</span>
         </button>`
 
-        body.innerHTML = `<h6>
-        Demo Inc would like to confirm your identity.
-        </h3>
+        body.innerHTML = `
+        <div id = "azyo_init_cont">
         <br>
         <h7>
-            BEFORE YOU START, PLEASE:
+            Before you start, please:
         </h7>
         <br>
         <ul>
             <li>Prepare a valid government-issued identity document</li>
             <li>Check if your device’s camera is uncovered and working</li>
             <li>Be prepared to take a selfie and photos of your ID</li>
-        </ul>`
+        </ul>
+        
+        </div>`
 
 
         var next_btn = document.createElement('button')
@@ -319,20 +320,19 @@ class DocTypeView extends AzyoView {
         <h6 class="azyo-modal-body-title">
                     Demo Inc would like to confirm your identity
                 </h6>
-                <br>
                 <div style = "display: flex;
                 flex-direction: row;
                 justify-content: center;
                 align-content: center;
                 padding-top: 10px;">
-                    <div style = "max-width: 50%;">
+                    <div style = "max-width: 40%;">
                         <ul>
                             <li>Prepare a valid government-issued identity document</li>
                             <li>Check if your device’s camera is uncovered and working</li>
                             <li>Be prepared to take photos of your ID</li>
                         </ul>
                     </div>
-                    <div style="margin-left: 40px; font-size: large; min-width: 30%;" id = "azyo_selection">
+                    <div style="margin-left: 40px; min-width: 30%;" id = "azyo_selection">
                         <span>
                             <h7>
                                 Country:     
@@ -497,7 +497,7 @@ class FrontsideView extends AzyoView {
         flipcart.innerHTML = `
         <div class="flip-card-inner">
             <div class="flip-card-front">
-                <img id = "frontpiccard" src="https://raw.githubusercontent.com/monacotime/azyo_embedded_viewport/main/cardfront.png" alt="Avatar" style="width:370px;height:250px;">
+                <img id = "frontpiccard" src="https://raw.githubusercontent.com/monacotime/azyo_embedded_viewport/main/cardfront.png" alt="Avatar" style="width: 100%">
             </div>
         </div>
         `
@@ -599,10 +599,10 @@ class BacksideView extends AzyoView {
         flipcart.innerHTML = `
         <div class="flip-card-inner">
             <div class="flip-card-front">
-                <img id = "frontpiccard" src="https://raw.githubusercontent.com/monacotime/azyo_embedded_viewport/main/cardfront.png" alt="Avatar" style="width:370px;height:250px;">
+                <img id = "frontpiccard" src="https://raw.githubusercontent.com/monacotime/azyo_embedded_viewport/main/cardfront.png" alt="Avatar" style="width: 100%">
             </div>
             <div class="flip-card-back">
-                <img id = "backpiccard" src="https://raw.githubusercontent.com/monacotime/azyo_embedded_viewport/main/cardback.png" alt="Avatar" style="width:370px;height:250px;">
+                <img id = "backpiccard" src="https://raw.githubusercontent.com/monacotime/azyo_embedded_viewport/main/cardback.png" alt="Avatar" style="width: 100%">
             </div>
         </div>
         `
@@ -695,40 +695,47 @@ class ResultGenView extends AzyoView {
         <h6 class="azyo-modal-body-title">
                     Please wait while we analyse your images
                 </h6>
-                <div style="margin-left: 60px;">
-                    <div>
-                        <div class = "azyo-instr">
-                            <i id = "ab" class="fa fa-circle-o-notch fa-spin"></i>
-                            Processing Your Selfie
+                <div style = "display: flex;
+                justify-content: space-between;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                align-items: center;">
+                    <div style="margin-left: 60px;">
+                        <div>
+                            <div class = "azyo-instr">
+                                <i id = "ab" class="fa fa-circle-o-notch fa-spin"></i>
+                                Processing Your Selfie
+                            </div>
                         </div>
-                    </div>
-    
-                    <div>
-                        <div class = "azyo-instr">
-                            <i id = "bb" class="fa fa-circle-o-notch fa-spin"></i>
-                            Extracting Document Details
+        
+                        <div>
+                            <div class = "azyo-instr">
+                                <i id = "bb" class="fa fa-circle-o-notch fa-spin"></i>
+                                Extracting Document Details
+                            </div>
                         </div>
-                    </div>
 
-                    <div>
-                        <div class = "azyo-instr">
-                            <i id = "cb" class="fa fa-circle-o-notch fa-spin"></i>
-                            Validating Results
+                        <div>
+                            <div class = "azyo-instr">
+                                <i id = "cb" class="fa fa-circle-o-notch fa-spin"></i>
+                                Validating Results
+                            </div>
                         </div>
+                    </div>
+                    <div class = "res_img_holder">
+                        <img id = "img1" class = "azyo_res_img" src="" alt="" />
+                        <img id = "img2" class = "azyo_res_img" src="" alt="" />
                     </div>
                 </div>
                 <div style = "display: flex;
                 flex-direction: row;
                 justify-content: center;
-                align-content: center;">
+                align-content: center;
+                margin-top: 15px">
                     <div class= "res_holder" >
-                        <div class = "res_img_holder">
-                            <img id = "img1" class = "azyo_res_img" src="" alt="" />
-                            <img id = "img2" class = "azyo_res_img" src="" alt="" />
-                        </div>
                         <div id = "azyo_res"></div>
                         <br>
-                        Your KYC number is <span id = "kyc_no" style= "font-weight: bold;"></span>
+                        <span id = "kyc_no" style= "font-weight: bold;"></span>
                         </div>
                     </div>
                 </div>
@@ -786,7 +793,7 @@ class ResultGenView extends AzyoView {
                 var res_div = document.getElementById("azyo_res")
 
                 if (resz == "TRUE"){
-                    document.getElementById('kyc_no').innerHTML = result['kyc']
+                    document.getElementById('kyc_no').innerHTML = "Your KYC number is: " + result['kyc']
                     c.setAttribute("class", "fa fa-check")
                     var disp_res = "Face match confirmed"
                     res_div.setAttribute("style", "color: green")
